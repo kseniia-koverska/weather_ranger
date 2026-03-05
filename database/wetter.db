@@ -1,0 +1,10 @@
+SELECT 
+    k.id AS Kleidung_ID,
+    k.name AS Name,
+    k.kategorie AS Kategorie,
+    r.min_temp AS Min_Temp,
+    r.max_temp AS Max_Temp,
+    r.regenschutz AS Regenfest,
+    r.wetter_typ AS Wetterzustand
+FROM kleidung k
+LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
