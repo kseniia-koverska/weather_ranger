@@ -36,7 +36,50 @@ Das Projekt wird von vier Teammitgliedern umgesetzt.
 
 ## 4. Verwendete Technologien
 
+Für die Entwicklung der Anwendung werden folgende Technologien verwendet:
+
+Frontend
+- HTML
+- CSS
+
+Backend
+- Webserver mit Python und Flask
+
+Datenbank
+- SQLite
+
+API
+- externe Wetter API (Open Meteo) zur Abfrage aktueller Wetterdaten
+
+Versionskontrolle
+- Git
+- GitHub
+
 ## 5. Systemarchitektur
+
+Die Anwendung besteht aus drei Hauptkomponenten:
+
+Frontend  
+Die Benutzeroberfläche wird mit HTML und CSS erstellt.
+Der Benutzer gibt eine Stadt, ein Datum und eine Uhrzeit ein.
+
+Backend  
+Das Backend verarbeitet die Anfrage und ruft
+Wetterdaten über eine externe API ab.
+
+Datenbank  
+Die Datenbank speichert Regeln für verschiedene
+Wetterbedingungen sowie passende Kleidungsempfehlungen.
+
+Der Ablauf der Anwendung ist wie folgt:
+
+1. Benutzer gibt eine Stadt, Datum und Uhrzeit ein
+2. Anfrage wird an das Backend gesendet
+3. Backend ruft Wetterdaten über die API ab
+4. Wetterdaten werden verarbeitet
+5. Datenbank wird nach passenden Regeln durchsucht
+6. Kleidungsempfehlung wird an das Frontend zurückgegeben
+7. Ergebnis wird im Browser angezeigt
 
 ## 6. Datenbank
 
