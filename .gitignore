@@ -1,0 +1,72 @@
+# Windows-specific files
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.bak
+*.log
+
+# Temporary files
+*.swp
+*.swo
+*.tmp
+*.temp
+*.~*
+
+# Application Data and App-specific files
+appdata/
+local/
+localLow/
+roaming/
+
+# Node.js modules
+node_modules/
+
+# IDE and Editor specific files
+.vscode/
+.idea/
+*.iml
+*.sublime-workspace
+*.sublime-project
+
+# Windows Installer files
+*.msi
+*.msp
+*.cab
+
+# Visual Studio temporary files, build results, and files from the installer
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.cache
+*.dbmdl
+*.bak
+
+# Windows Installer files
+*.cab
+
+# Other environment-specific files
+.env
+*.pid
+*.orig
+*.rej
+
+# macOS-specific files (in case the project is cross-platform)
+.DS_Store
+
+# Other unnecessary files (you can add more if needed)
+*.gz
+*.tar
+*.zip
+*.7z
+*.rar
+*.xz
+*.tar.gz
+*.tar.xz
+*.tgz
+
+# .NET files
+.vs2019/
+.vs2017/
