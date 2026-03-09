@@ -46,25 +46,7 @@ Backend
 - Webserver mit Python und Flask
 
 Datenbank
-- DB Browser for SQLite: Zur visuellen Verwaltung und zum Testen der SQL-Befehle. 
-- Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
-- Erstellung der Tabellen mit CREATE TABLE
-- Vollständige Bestandsliste:
-- SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
-  FROM kleidung k 
-  LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
-- Datenintegrität: Verwendung von UNIQUE-Constraints und ON DELETE CASCADE-Regeln.
-  .CREATE TABLE kleidung (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
-    kategorie TEXT
-   );
-  .CREATE TABLE wetter_regeln (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ...
-    kleidung_id INTEGER,
-    FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
-   );
+-SQLite
 API
 - externe Wetter API (Open Meteo) zur Abfrage aktueller Wetterdaten
 
@@ -99,6 +81,25 @@ Der Ablauf der Anwendung ist wie folgt:
 7. Ergebnis wird im Browser angezeigt
 
 ## 6. Datenbank
+- DB Browser for SQLite: Zur visuellen Verwaltung und zum Testen der SQL-Befehle. 
+- Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
+- Erstellung der Tabellen mit CREATE TABLE
+- Vollständige Bestandsliste:
+- SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
+  FROM kleidung k 
+  LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
+- Datenintegrität: Verwendung von UNIQUE-Constraints und ON DELETE CASCADE-Regeln.
+  .CREATE TABLE kleidung (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
+    kategorie TEXT
+   );
+  .CREATE TABLE wetter_regeln (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ...
+    kleidung_id INTEGER,
+    FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+   );
 
 ## 7. Backend und API
 
