@@ -86,14 +86,17 @@ Der Ablauf der Anwendung ist wie folgt:
 - Erstellung der Tabellen mit CREATE TABLE
 - Vollständige Bestandsliste:
 - SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
-  FROM kleidung k 
+  FROM kleidung k
   LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
+  
 - Datenintegrität: Verwendung von UNIQUE-Constraints und ON DELETE CASCADE-Regeln.
+  
   .CREATE TABLE kleidung (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
     kategorie TEXT
    );
+  
   .CREATE TABLE wetter_regeln (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     ...
