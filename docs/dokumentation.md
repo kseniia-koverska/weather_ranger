@@ -237,6 +237,33 @@ Die Datei index.html beinhaltet die Struktur der Startseite der WEATHER-RANGERS-
 
 ## 11. Fehlerbehandlung
 
+Bei der Entwicklung der Anwendung wurde darauf geachtet, mögliche Fehlerquellen zu berücksichtigen und die Stabilität des Systems zu gewährleisten. Fehler können sowohl durch falsche Benutzereingaben als auch durch externe Faktoren wie Verbindungsprobleme mit der Wetter-API auftreten. Durch geeignete Maßnahmen wird verhindert, dass die Anwendung abstürzt, und der Benutzer erhält verständliche Rückmeldungen.
+
+### 11.1 Überprüfung der Benutzereingaben
+
+Vor der Verarbeitung werden die Eingaben des Benutzers überprüft. Pflichtfelder wie Stadt, Datum und Uhrzeit müssen ausgefüllt sein.
+
+Frontend-Kontrolle (Benutzerfreundlich)
+
+Viele Fehler lassen sich direkt im Frontend verhindern, bevor die Daten an das Backend gesendet werden.
+
+**Beispiel mit HTML**:
+  ```html
+  <form action="/empfehlung" method="post">
+  <input type="text" name="city" placeholder="Stadt eingeben" 
+         pattern="[A-Za-zÄÖÜäöüß\s]+" title="Nur Buchstaben erlaubt" required>
+  <input type="date" name="date" required>
+  <input type="time" name="time" required>
+  <button type="submit">Empfehlung anzeigen</button>
+</form>
+```
+
+### 11.2 Fehler beim Abrufen der Wetterdaten
+
+Die Anwendung ruft Wetterdaten über eine externe Wetter-API ab. Dabei können verschiedene Probleme auftreten, zum Beispiel wenn keine Internetverbindung besteht oder der API-Dienst vorübergehend nicht erreichbar ist.
+
+Um solche Situationen zu behandeln, wird im Backend eine Fehlerbehandlung implementiert. Tritt beim Abrufen der Daten ein Fehler auf, wird dieser abgefangen und dem Benutzer eine entsprechende Meldung angezeigt, dass die Wetterdaten aktuell nicht geladen werden konnten.
+
 ## 12. Installation
 
 ## 13. Fazit
