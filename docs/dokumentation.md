@@ -106,7 +106,7 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 
 **Abbildung: Activity-Diagramm der Anwendung**  
 
-![Activity-Diagramm](activity_diagramm.png)
+![Activity-Diagramm](activity_diagram.drawio.png)
 
 ## 6. Datenbank
 - DB Browser for SQLite: Zur visuellen Verwaltung und zum Testen der SQL-Befehle. 
