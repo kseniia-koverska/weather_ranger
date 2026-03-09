@@ -80,6 +80,34 @@ Der Ablauf der Anwendung ist wie folgt:
 6. Kleidungsempfehlung wird an das Frontend zurückgegeben
 7. Ergebnis wird im Browser angezeigt
 
+### 5.1 Use-Case-Diagramm
+
+Das Use-Case-Diagramm zeigt die Interaktion zwischen dem Benutzer und dem System „Kleidungsempfehlung“.
+
+- Der Benutzer gibt die notwendigen Informationen ein: Stadt, Datum und Uhrzeit.  
+- Das System ruft automatisch die Wetterdaten über die Open Meteo API ab, verarbeitet diese Daten, sucht in der Datenbank nach passenden Regeln und generiert eine Kleidungsempfehlung.  
+- Abschließend wird die Empfehlung dem Benutzer im Webbrowser angezeigt.
+
+**Abbildung: Use-Case-Diagramm der Anwendung**  
+
+![Use-Case-Diagramm](use_case_diagramm.png)
+
+### 5.2 Activity-Diagramm
+
+Das Activity-Diagramm zeigt den detaillierten Ablauf innerhalb des Systems:
+
+- Start: Benutzer gibt Informationen ein  
+- Entscheidung: Wetterdaten abrufen  
+- Verarbeitung: Regeln prüfen  
+- Generierung der Kleidungsempfehlung  
+- Ende: Empfehlung anzeigen
+
+Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vom System durchgeführt werden, und zeigt die Logik hinter der Generierung der Empfehlungen.
+
+**Abbildung: Activity-Diagramm der Anwendung**  
+
+![Activity-Diagramm](activity_diagramm.png)
+
 ## 6. Datenbank
 - DB Browser for SQLite: Zur visuellen Verwaltung und zum Testen der SQL-Befehle. 
 - Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
