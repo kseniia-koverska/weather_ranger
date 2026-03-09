@@ -90,7 +90,7 @@ Das Use-Case-Diagramm zeigt die Interaktion zwischen dem Benutzer und dem System
 
 **Abbildung: Use-Case-Diagramm der Anwendung**  
 
-![Use-Case-Diagramm](use_case_diagramm.png)
+![Use-Case-Diagramm](use_case_diagramm.drawio.png)
 
 ### 5.2 Activity-Diagramm
 
