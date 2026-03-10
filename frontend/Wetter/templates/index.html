@@ -26,6 +26,7 @@ gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
 <p>
 
 <button type="submit">empfehlung abrufen</button>
+</form>
 
 <h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
 {% if submits %}
@@ -36,7 +37,11 @@ gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
 <p>Noch keine Einträge vorhanden.</p>
 {% endif %}
 
-</form>
+<h2>API-CALL Response:</h2>
+{% if api_response %}
+<p> {{ api_response }} </p>
+{% endif %}
+
 
 </body>
 </html>

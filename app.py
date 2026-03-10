@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+import requests
 import sqlite3
 import sys
 app = Flask(__name__, template_folder='frontend/Wetter/templates')
@@ -13,14 +14,55 @@ app = Flask(__name__, template_folder='frontend/Wetter/templates')
 
 # START: ------------------------ API Logik --------------------------
 
-lat = '52.52'
+# Test-URL für Berlin:
+# url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=2026-03-03&end_date=2026-03-17'
+# longitude, latitude for Berlin:
+# lat = '52.52'
+# long = '13.41'
 
-long = '13.41'
+def apiCall(latitude, longitude, date, time):
+	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=#' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
+	response = requests.get(url)
+	hour_index = time 
 
-url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&utm_source=chatgpt.com'
+	# Antwort als Array:
+	api_reply = []
+	
+	# Überprüfen, ob die Anfrage erfolgreich war
+	if response.status_code == 200:
 
-url_glued = 'https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=#' + long + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&utm_source=chatgpt.com'
+		# Parse die JSON-antwort
+		data = response.json()
+		
+		# Extrahieren der Temperatur für eine bestimmte "hourly" Stunde
+		# Beispiel: für die Stunde 14:00 (2:00 PM)
+		# Die "hourly" Daten sind in Stunden-Verzögerung, daher müssen wir die Stunde auf Stunden-Index in der Datenliste umrechnen
+		hourly_data = data['hourly']
+		
+		temperature = hourly_data['temperature_2m'][hour_index]
+		rain = hourly_data['rain'][hour_index]
+		snowfall = hourly_data['snowfall'][hour_index]
+		wind = hourly_data['wind_speed_10m'][hour_index]
+		print("Datum:", date)
+		print(f"Temperature at hour {hour_index}: {temperature}°C")
+		print(f"Rain: {rain}mm, Snowfall: {snowfall}cm, Wind: {wind} km/h")
 
+		api_reply.append({
+						"Datum" : date,
+						"Uhrzeit" : time, 
+						"Temperatur" : hourly_data['temperature_2m'][hour_index],
+						"Regen" : hourly_data['rain'][hour_index],
+						"Schnee" : hourly_data['snowfall'][hour_index],
+						"Wind" : hourly_data['wind_speed_10m'][hour_index]
+						})
+		
+		return api_reply
+
+	else:
+		print(f"Fehler: Die Anfrage wurde nicht erfolgreich abgearbeitet. Statuscode: {response.status_code}")
+		api_error = f"Fehler: Die Anfrage wurde nicht erfolgreich abgearbeitet. Statuscode: {response.status_code}"
+		api_reply.append(api_error)
+		return api_reply
 
 
 """
@@ -89,7 +131,8 @@ def home():
 		standort = request.form["standort"]
 		datum = request.form["datum"]
 		zeit = request.form["uhrzeit"]
-		
+		stunde = zeit[:2]
+		api_response = []
 		form_submits.append((datum, zeit))
 
 		conn = get_db()
@@ -98,7 +141,9 @@ def home():
 		print("Standort:", standort)
 		print("Datum:", datum)
 
-	return render_template("index.html", submits=form_submits)
+		api_response = apiCall('52.52', '13.41', datum, stunde)
+
+	return render_template("index.html", submits=form_submits, api_response=api_response)
 
 if __name__ == "__main__":
 	init_db() 
