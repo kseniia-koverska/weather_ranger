@@ -130,7 +130,7 @@ def home():
 	print("Python is used from:", sys.executable)
 
 	api_response = ['Test']
-    
+
 	if request.method == "POST":
 		print("--------------------TEST----------------")
 		standort = request.form["standort"]

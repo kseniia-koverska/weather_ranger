@@ -249,26 +249,25 @@ Das Ziel ist, Systemabstürze zu vermeiden und dem Benutzer verständliche Rück
 
 ### 11.1 Fehlende oder ungültige Benutzereingaben
 
-Die Anwendung überprüft alle Eingaben des Benutzers, bevor sie verarbeitet werden.
-Dies betrifft insbesondere die Pflichtfelder im HTML-Formular:
+Die Anwendung überprüft alle Eingaben des Benutzers, bevor sie verarbeitet werden. Dies betrifft insbesondere die Pflichtfelder im HTML-Formular:
 
-  ```html
+Beispiel HTML-Formular:
+```html
 <input type="text" name="standort">
 <input type="datetime-local" name="datum">
 ```
-Im Backend werden die Daten über Flask aus dem Formular ausgelesen:
 
-```Python
-standort = request.form["standort"]
-datum = request.form["datum"]
-```
+Im Backend werden die Daten über Flask aus dem Formular ausgelesen:
+```standort = request.form["standort"]
+datum = request.form["datum"]```
+
 Verhalten bei fehlenden Eingaben:
 Wenn ein Pflichtfeld leer ist oder ungültige Daten enthält, wird die Verarbeitung abgebrochen und eine Fehlermeldung angezeigt.
 
-Beispielhafte Fehlermeldung:
-**Bitte alle Felder ausfüllen.**
+**Beispielhafte Fehlermeldung:
+Bitte alle Felder ausfüllen.**
 
-(Hinweis: Die Überprüfung kann z.B. über request.form.get() im Backend oder ein Dropdown-Menü für Städte erfolgen, um ungültige Eingaben zu vermeiden.)
+*(Hinweis: Die Überprüfung kann z.B. über request.form.get() im Backend oder ein Dropdown-Menü für Städte erfolgen, um ungültige Eingaben zu vermeiden.)*
 
 ### 11.2 Fehler beim Abrufen der Wetterdaten
 
@@ -280,12 +279,30 @@ Beim Abrufen der Wetterdaten über die externe API kann es zu Problemen kommen, 
 
 - ungültige Antwort von der API
 
-Beispielhafte Fehlermeldung:
-Wetterdaten konnten nicht geladen werden.
+**Beispielhafte Fehlermeldung:
+Wetterdaten konnten nicht geladen werden.**
 
-(Hinweis: Im Backend kann dies z.B. durch ein try-except beim API-Request abgefangen werden.)
+*(Hinweis: Im Backend kann dies z.B. durch ein try-except beim API-Request abgefangen werden.)*
 
-### 11.3 
+### 11.3 Fehler bei der Datenbankverbindung
+
+Die Anwendung stellt eine Verbindung zur SQLite-Datenbank her, um Wetterregeln und Kleidungsempfehlungen abzurufen. Dabei können folgende Probleme auftreten:
+
+- Die Datenbankdatei wetter.db existiert nicht oder ist beschädigt
+
+- Fehler beim Öffnen der Verbindung oder Ausführen von SQL-Abfragen
+
+**Beispielhafte Fehlermeldung: Datenbankverbindung fehlgeschlagen.**
+
+*(Hinweis: Im Backend kann dies z.B. durch ein try-except beim sqlite3.connect("wetter.db") abgefangen werden.)*
+
+### 11.4 Keine passende Kleidungsempfehlung gefunden
+
+Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der Datenbank existiert. In diesem Fall sollte der Benutzer informiert werden, damit die Anwendung nicht abstürzt.
+
+**Beispielhafte Fehlermeldung: Keine passende Kleidungsempfehlung gefunden.**
+
+*(Hinweis: Im Backend kann dies z.B. durch eine Prüfung, ob die SQL-Abfrage ein Ergebnis liefert, und ggf. Rückgabe einer Fehlermeldung an das Frontend umgesetzt werden.)*
 
 ## 12. Installation
 
