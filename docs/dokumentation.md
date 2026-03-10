@@ -233,36 +233,59 @@ Die Datei index.html beinhaltet die Struktur der Startseite der WEATHER-RANGERS-
 
 ## 9. Integration
 
+Die einzelnen Komponenten des Systems wurden schrittweise miteinander verbunden.
+Zunächst wurde das Frontend mit dem Backend verbunden, sodass Benutzereingaben an den Flask-Server übermittelt werden können.
+Anschließend wurde die Verbindung zur Wetter-API implementiert, um aktuelle Wetterdaten abzurufen.
+Danach wurde die Datenbank integriert, um passende Kleidungsempfehlungen anhand der Wetterbedingungen zu bestimmen.
+Abschließend wurde das Ergebnis wieder an das Frontend zurückgegeben und im Browser angezeigt.
+
 ## 10. Tests
 
 ## 11. Fehlerbehandlung
 
-Bei der Entwicklung der Anwendung wurde darauf geachtet, mögliche Fehlerquellen zu berücksichtigen und die Stabilität des Systems zu gewährleisten. Fehler können sowohl durch falsche Benutzereingaben als auch durch externe Faktoren wie Verbindungsprobleme mit der Wetter-API auftreten. Durch geeignete Maßnahmen wird verhindert, dass die Anwendung abstürzt, und der Benutzer erhält verständliche Rückmeldungen.
+Um die Stabilität der Anwendung zu gewährleisten, wurde eine Fehlerbehandlung konzipiert.
+Dabei werden sowohl Benutzereingaben als auch mögliche Fehler bei der Kommunikation mit externen Diensten berücksichtigt.
+Das Ziel ist, Systemabstürze zu vermeiden und dem Benutzer verständliche Rückmeldungen zu geben.
 
-### 11.1 Überprüfung der Benutzereingaben
+### 11.1 Fehlende oder ungültige Benutzereingaben
 
-Vor der Verarbeitung werden die Eingaben des Benutzers überprüft. Pflichtfelder wie Stadt, Datum und Uhrzeit müssen ausgefüllt sein.
+Die Anwendung überprüft alle Eingaben des Benutzers, bevor sie verarbeitet werden.
+Dies betrifft insbesondere die Pflichtfelder im HTML-Formular:
 
-Frontend-Kontrolle (Benutzerfreundlich)
-
-Viele Fehler lassen sich direkt im Frontend verhindern, bevor die Daten an das Backend gesendet werden.
-
-**Beispiel mit HTML**:
   ```html
-  <form action="/empfehlung" method="post">
-  <input type="text" name="city" placeholder="Stadt eingeben" 
-         pattern="[A-Za-zÄÖÜäöüß\s]+" title="Nur Buchstaben erlaubt" required>
-  <input type="date" name="date" required>
-  <input type="time" name="time" required>
-  <button type="submit">Empfehlung anzeigen</button>
-</form>
+<input type="text" name="standort">
+<input type="datetime-local" name="datum">
 ```
+Im Backend werden die Daten über Flask aus dem Formular ausgelesen:
+
+```Python
+standort = request.form["standort"]
+datum = request.form["datum"]
+```
+Verhalten bei fehlenden Eingaben:
+Wenn ein Pflichtfeld leer ist oder ungültige Daten enthält, wird die Verarbeitung abgebrochen und eine Fehlermeldung angezeigt.
+
+Beispielhafte Fehlermeldung:
+**Bitte alle Felder ausfüllen.**
+
+(Hinweis: Die Überprüfung kann z.B. über request.form.get() im Backend oder ein Dropdown-Menü für Städte erfolgen, um ungültige Eingaben zu vermeiden.)
 
 ### 11.2 Fehler beim Abrufen der Wetterdaten
 
-Die Anwendung ruft Wetterdaten über eine externe Wetter-API ab. Dabei können verschiedene Probleme auftreten, zum Beispiel wenn keine Internetverbindung besteht oder der API-Dienst vorübergehend nicht erreichbar ist.
+Beim Abrufen der Wetterdaten über die externe API kann es zu Problemen kommen, z.B.:
 
-Um solche Situationen zu behandeln, wird im Backend eine Fehlerbehandlung implementiert. Tritt beim Abrufen der Daten ein Fehler auf, wird dieser abgefangen und dem Benutzer eine entsprechende Meldung angezeigt, dass die Wetterdaten aktuell nicht geladen werden konnten.
+- fehlende Internetverbindung
+
+- Server der API vorübergehend nicht erreichbar
+
+- ungültige Antwort von der API
+
+Beispielhafte Fehlermeldung:
+Wetterdaten konnten nicht geladen werden.
+
+(Hinweis: Im Backend kann dies z.B. durch ein try-except beim API-Request abgefangen werden.)
+
+### 11.3 
 
 ## 12. Installation
 

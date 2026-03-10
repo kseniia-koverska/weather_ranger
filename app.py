@@ -4,7 +4,7 @@ app = Flask(__name__, template_folder='frontend/Wetter/templates')
 
 @app.route("/", methods=["GET","POST"])
 def home():
-	print("Python используется из:", sys.executable)
+	print("Python is used from:", sys.executable)
 	if request.method == "POST":
 		standort = request.form["standort"]
 		datum = request.form["datum"]
