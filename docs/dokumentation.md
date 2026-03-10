@@ -258,8 +258,10 @@ Beispiel HTML-Formular:
 ```
 
 Im Backend werden die Daten über Flask aus dem Formular ausgelesen:
-```standort = request.form["standort"]
-datum = request.form["datum"]```
+```Python
+standort = request.form["standort"]
+datum = request.form["datum"]
+```
 
 Verhalten bei fehlenden Eingaben:
 Wenn ein Pflichtfeld leer ist oder ungültige Daten enthält, wird die Verarbeitung abgebrochen und eine Fehlermeldung angezeigt.
