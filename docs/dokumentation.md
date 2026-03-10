@@ -266,4 +266,16 @@ Um solche Situationen zu behandeln, wird im Backend eine Fehlerbehandlung implem
 
 ## 12. Installation
 
+python -m venv venv - in root des Projekts (weather_ranger Ordner), der Befehl erstellt den Ordner der lokalen Umgebung
+venv\Scripts\activate - der Befehl aktiviert die lokale Umgebung (danach sieht man (venv) vor dem Verzeichnis)
+pip install -r requirements.txt - lädt alle Abhängigkeiten (dependencies) 
+python app.py - startet lokaler Webserver
+
+**Warum lokal installieren und nicht in AppData?**  
+- Pakete werden **nur für dieses Projekt** installiert, nicht global für alle Python-Projekte.  
+- Verhindert Konflikte zwischen verschiedenen Projekten, die unterschiedliche Versionen von Flask oder anderen Paketen brauchen.  
+- Macht das Projekt **portabel**: Kollegen können die Abhängigkeiten einfach in ihrem eigenen venv installieren.  
+- Globale Installation in AppData kann zu **unerwarteten Fehlern** führen, wenn andere Projekte oder Tools andere Versionen der Pakete erwarten.  
+
+
 ## 13. Fazit

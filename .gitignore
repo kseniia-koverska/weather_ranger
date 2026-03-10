@@ -70,3 +70,8 @@ node_modules/
 # .NET files
 .vs2019/
 .vs2017/
+
+
+venv/
+__pycache__/
+*.pyc
