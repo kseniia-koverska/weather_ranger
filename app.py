@@ -21,7 +21,7 @@ app = Flask(__name__, template_folder='frontend/Wetter/templates')
 # long = '13.41'
 
 def apiCall(latitude, longitude, date, time):
-	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=#' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
+	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
 	response = requests.get(url)
 	hour_index = time 
 
@@ -124,15 +124,17 @@ def get_db():
 
 form_submits = []
 
+
 @app.route("/", methods=["GET","POST"])
 def home():
 	print("Python используется из:", sys.executable)
+	api_response = ['Test']
 	if request.method == "POST":
+		print("--------------------TEST----------------")
 		standort = request.form["standort"]
 		datum = request.form["datum"]
 		zeit = request.form["uhrzeit"]
 		stunde = zeit[:2]
-		api_response = []
 		form_submits.append((datum, zeit))
 
 		conn = get_db()
@@ -140,6 +142,8 @@ def home():
 
 		print("Standort:", standort)
 		print("Datum:", datum)
+
+		# api_response = [datum, stunde]
 
 		api_response = apiCall('52.52', '13.41', datum, stunde)
 
