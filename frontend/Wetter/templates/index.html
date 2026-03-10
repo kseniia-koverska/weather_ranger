@@ -21,12 +21,27 @@ gib hier deinen standort an und es kann losgehen:
 <p>
 du brauchst eine empfehlung für die nächsten tage?<br>
 gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
-<input type="datetime-local" name="datum">
+<input type="date" name="datum" required>
+<input type="time" id="uhrzeit" name="uhrzeit" required>
 <p>
 
 <button type="submit">empfehlung abrufen</button>
-
 </form>
+<!-- TESTING -->
+<h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
+{% if submits %}
+<p>Datum: {{ submits[0][0] }}</p>
+<p>Uhrzeit: {{ submits[0][1] }}</p>
+<p>Stunde: {{ submits[0][1][:2] }}</p>
+{% else %}
+<p>Noch keine Einträge vorhanden.</p>
+{% endif %}
+
+<h2>API-CALL Response:</h2>
+{% if api_response %}
+<p> {{ api_response }} </p>
+{% endif %}
+<!-- TESTING -->
 
 </body>
 </html>
