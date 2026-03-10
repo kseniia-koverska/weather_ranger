@@ -134,7 +134,7 @@ def home():
 		standort = request.form["standort"]
 		datum = request.form["datum"]
 		zeit = request.form["uhrzeit"]
-		stunde = zeit[:2]
+		stunde = int(zeit[:2])
 		form_submits.append((datum, zeit))
 
 		conn = get_db()
