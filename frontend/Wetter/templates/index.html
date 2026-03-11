@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>WEATHER RANGERS</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
@@ -14,19 +15,25 @@ mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
 anhand deines standorts entsprechende kleidungsempfehlungen <br>
 ausgeben lassen. <br><br>
 
-gib hier deinen standort an und es kann losgehen:
-<input type="text" name="standort" required placeholder="Berlin">
+gib hier deinen standort an und es kann losgehen:<br><br>
+<input type="text" name="standort">
 </p>
 
 <p>
 du brauchst eine empfehlung für die nächsten tage?<br>
-gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
-<input type="date" name="datum" required>
-<input type="time" id="uhrzeit" name="uhrzeit" required>
+gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:<br><br>
+<input type="datetime-local" name="datum">
 <p>
 
-<button type="submit">empfehlung abrufen</button>
+<button type="submit" class="cloud-btn">Empfehlung abrufen
+</button>
+
 </form>
+
+</body>
+</html>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- TESTING -->
 <h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
 {% if submits %}
@@ -45,3 +52,4 @@ gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
 
 </body>
 </html>
+
