@@ -130,7 +130,9 @@ def home():
 	print("Python is used from:", sys.executable)
 
 	api_response = ['Test']
-
+	empfehlung_oberteil = ''
+	empfehlung_kopfbedeckung = ''
+	
 	if request.method == "POST":
 		print("--------------------TEST----------------")
 		standort = request.form["standort"]
@@ -149,7 +151,23 @@ def home():
 
 		api_response = apiCall('52.52', '13.41', datum, stunde)
 
-	return render_template("index.html", submits=form_submits, api_response=api_response)
+		temperature = api_response[0]["Temperatur"]
+
+		if 0 <= temperature < 5:
+			empfehlung_oberteil = "Winter Jacke + dicker Pullover"
+			empfehlung_kopfbedeckung = 'Mütze + Schal'
+		elif 5 <= temperature < 10:
+			empfehlung_oberteil = "Winter Jacke / dicker Pullover"
+		elif 10 <= temperature <= 15:
+			empfehlung_oberteil = "Leichte Jacke empfohlen"
+		elif 15 < temperature < 20:
+			empfehlung_oberteil = "dünner Pullover oder leichte Jacke möglich"
+		elif temperature > 20:
+			empfehlung_oberteil = "T-Shirt / leichte Kleidung"
+		
+
+
+	return render_template("index.html", submits=form_submits, api_response=api_response, empfehlung_oberteil=empfehlung_oberteil)
 
 if __name__ == "__main__":
 	init_db() 
