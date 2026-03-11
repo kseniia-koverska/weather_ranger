@@ -98,24 +98,30 @@ DB_NAME = "test_wetter.db"
 
 # Test-Datenbank erstellen + Tabelle anlegen
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+	try:
+		conn = sqlite3.connect(DB_NAME)
+		cursor = conn.cursor()
+		
+		print("Succesfully connected to", DB_NAME)
 
-    cursor.execute("""
-    CREATE TABLE IF NOT EXISTS wetter (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        stadt TEXT,
-        temperatur INTEGER
-    )
-    """)
+		cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+		tables = cursor.fetchall()
 
-    cursor.execute(
-        "INSERT INTO wetter (stadt, temperatur) VALUES (?, ?)",
-        ("Berlin", 20)   # Beispiel: Stadt Berlin, 20°C
-    )
+		cursor.execute("SELECT * FROM wetter;")
+		tables_content = cursor.fetchall()
 
-    conn.commit()
-    conn.close()
+		print("Tabellen:")
+		for table in tables:
+			print(table)
+
+		print("Tabelleninhalt:", tables_content)
+
+	except sqlite3.Error as e:
+		print("SQLite Fehler:", e)
+
+	finally:
+		if conn:
+			conn.close()
 
 
 # Datenbank Verbindung
