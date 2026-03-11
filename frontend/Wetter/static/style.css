@@ -1,0 +1,40 @@
+body {
+    	background-color: lightblue;
+    	font-family: Arial, sans-serif;
+	color: #2b6cb0;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+	margin: 0;
+	padding: 0;
+
+}
+
+form {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.cloud-btn {
+    background-image: url('wolke.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+
+    width: 170px;
+    height: 120px;
+    border: none;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #2b6cb0;
+}
