@@ -308,10 +308,18 @@ Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der 
 
 ## 12. Installation
 
-python -m venv venv - in root des Projekts (weather_ranger Ordner), der Befehl erstellt den Ordner der lokalen Umgebung
-venv\Scripts\activate - der Befehl aktiviert die lokale Umgebung (danach sieht man (venv) vor dem Verzeichnis)
-pip install -r requirements.txt - lädt alle Abhängigkeiten (dependencies) 
-python app.py - startet lokaler Webserver
+1. python -m venv venv - in root des Projekts (weather_ranger Ordner), der Befehl erstellt den Ordner der lokalen Umgebung
+2. venv\Scripts\activate - der Befehl aktiviert die lokale Umgebung (danach sieht man (venv) vor dem Verzeichnis)
+3. pip install -r requirements.txt - lädt alle Abhängigkeiten (dependencies) 
+4. python app.py - startet lokaler Webserver
+
+### App starten:
+
+1. Im Terminal in den root-Ordner wechseln (Weather Rangers)
+2. In Terminal eingeben: venv\Scripts\activate
+3. In Terminal eingeben: py app.py
+4. STRG (gedrückt halten) und auf http://127.0.0.1:5000/ klicken
+
 
 **Warum lokal installieren und nicht in AppData?**  
 - Pakete werden **nur für dieses Projekt** installiert, nicht global für alle Python-Projekte.  
