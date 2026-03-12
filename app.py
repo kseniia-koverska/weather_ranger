@@ -96,6 +96,46 @@ Leipzig: Latitude: 51.3397°, Longitude: 12.3731°
 # Name Testdatenbank
 DB_NAME = "wetter.db"
 
+# Funktion für DB-Suche (Kleidungsempfehlung im bestimmten Temp. Bereich):
+
+def db_empfehlung_items(min_t, max_t, kategorie):
+	conn = sqlite3.connect(DB_NAME)
+	cursor = conn.cursor()
+
+	empfehlung_items = []
+
+	sql_stmt = """
+				SELECT 
+					k.name AS Kleidungsstück, 
+					k.kategorie AS Kategorie, 
+					w.min_temp AS Min_Temperatur, 
+					w.max_temp AS Max_Temperatur,
+					w.wetter_typ AS Wetterzustand
+				FROM 
+					kleidung k
+				JOIN 
+					wetter_regeln w ON k.id = w.kleidung_id
+				WHERE 
+					k.kategorie = ?
+					AND (
+						w.min_temp <= ?
+						AND w.max_temp >= ?
+					)
+				ORDER BY 
+					k.name;
+				"""
+
+	cursor.execute(sql_stmt, (kategorie, max_t, min_t))
+	kleidungsteile = cursor.fetchall()
+
+	for i, item in enumerate(kleidungsteile):
+			empfehlung_items.append(item[0])
+	
+	conn.close()
+
+	return empfehlung_items
+
+
 # Test-Datenbank erstellen + Tabelle anlegen
 def init_db():
 	try:
@@ -104,17 +144,48 @@ def init_db():
 		
 		print("Succesfully connected to", DB_NAME)
 
-		cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-		tables = cursor.fetchall()
+		#cursor.execute("SELECT * FROM sqlite_master WHERE type='table';")
+		#tables = cursor.fetchall()
 
-		cursor.execute("SELECT * FROM kleidung;")
-		tables_content = cursor.fetchall()
+		#cursor.execute("SELECT k.name AS Kleidungsstück, k.kategorie AS Kategorie, w.min_temp AS Min_Temperatur, w.max_temp AS Max_Temperatur, w.wetter_typ AS Wetterzustand FROM kleidung k JOIN wetter_regeln w ON k.id = w.kleidung_id WHERE 25 BETWEEN w.min_temp AND w.max_temp ORDER BY k.kategorie;")
+		#tables_content = cursor.fetchall()
 
-		print("Tabellen:")
-		for table in tables:
-			print(table)
+		cursor.execute("""
+						SELECT 
+							k.name AS Kleidungsstück, 
+							k.kategorie AS Kategorie, 
+							w.min_temp AS Min_Temperatur, 
+							w.max_temp AS Max_Temperatur,
+							w.wetter_typ AS Wetterzustand
+						FROM 
+							kleidung k
+						JOIN 
+							wetter_regeln w ON k.id = w.kleidung_id
+						WHERE 
+							k.kategorie = 'Oberteil' 
+							AND (
+								
+								w.min_temp <= 5 AND w.max_temp >= 0
+							)
+						ORDER BY 
+							k.name;
+						""")
+		
+		kleidungsteile = cursor.fetchall()
+		#print("Tabellen:")
+		#for table in tables:
+		#	print(table)
 
-		print("Tabelleninhalt:", tables_content)
+		#print("Tabelleninhalt:", tables_content)
+		print("Kleidung bei 0°C bis 5°C:")
+
+		for i, item in enumerate(kleidungsteile):
+			print(item[0])
+		
+		print("Daten aus db_empfehlung_items Funktion:")
+		empfehlung = db_empfehlung_items(0, 5, 'Oberteil')
+		print(empfehlung)
+
 
 	except sqlite3.Error as e:
 		print("SQLite Fehler:", e)
@@ -128,6 +199,8 @@ def init_db():
 def get_db():
     return sqlite3.connect(DB_NAME)
 
+# ------------- API FRONTEND/BACKEND ------------------------
+
 form_submits = []
 
 
@@ -138,6 +211,9 @@ def home():
 	api_response = ['Test']
 	empfehlung_oberteil = ''
 	empfehlung_kopfbedeckung = ''
+	empfehlung_hose = ''
+	empfehlung_schuhe = ''
+	empfehlung_sonnenbrille = False
 	
 	if request.method == "POST":
 		print("--------------------TEST----------------")
@@ -159,23 +235,61 @@ def home():
 
 		temperature = api_response[0]["Temperatur"]
 
-		if 0 <= temperature < 5:
+		if -20 <= temperature < -15:
+			empfehlung_oberteil = ''
+			empfehlung_kopfbedeckung = ''
+			empfehlung_hose = ''
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
+		elif -15 <= temperature < -10:
+			empfehlung_oberteil = ''
+			empfehlung_kopfbedeckung = ''
+			empfehlung_hose = ''
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
+		elif -10 <= temperature < -5:
+			empfehlung_oberteil = ''
+			empfehlung_kopfbedeckung = ''
+			empfehlung_hose = ''
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
+		elif -5 <= temperature < 0:
+			empfehlung_oberteil = ''
+			empfehlung_kopfbedeckung = ''
+			empfehlung_hose = ''
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
+		elif 0 <= temperature < 5:
 			empfehlung_oberteil = "Winter Jacke + dicker Pullover"
 			empfehlung_kopfbedeckung = 'Mütze + Schal'
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
 		elif 5 <= temperature < 10:
 			empfehlung_oberteil = "Winter Jacke / dicker Pullover"
+			empfehlung_kopfbedeckung = 'Mütze + Schal'
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
 		elif 10 <= temperature <= 15:
-			empfehlung_oberteil = "Leichte Jacke empfohlen"
+			empfehlung_oberteil = db_empfehlung_items(10,15,'Oberteil')
+			empfehlung_kopfbedeckung = 'Mütze + Schal'
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
 		elif 15 < temperature < 20:
 			empfehlung_oberteil = "dünner Pullover oder leichte Jacke möglich"
+			empfehlung_kopfbedeckung = 'Mütze + Schal'
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
 		elif temperature > 20:
 			empfehlung_oberteil = "T-Shirt / leichte Kleidung"
+			empfehlung_kopfbedeckung = 'Mütze + Schal'
+			empfehlung_schuhe = ''
+			empfehlung_sonnenbrille = False
 		
 
 
 	return render_template("index.html", submits=form_submits, api_response=api_response, empfehlung_oberteil=empfehlung_oberteil)
 
 if __name__ == "__main__":
-	init_db() 
+	init_db()
 	app.run(debug=True)
 
