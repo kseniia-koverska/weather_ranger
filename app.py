@@ -94,7 +94,7 @@ Leipzig: Latitude: 51.3397°, Longitude: 12.3731°
 # --------------------- DATENBANK INTEGRATION ------------------------
 
 # Name Testdatenbank
-DB_NAME = "test_wetter.db"
+DB_NAME = "wetter.db"
 
 # Test-Datenbank erstellen + Tabelle anlegen
 def init_db():
@@ -107,7 +107,7 @@ def init_db():
 		cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
 		tables = cursor.fetchall()
 
-		cursor.execute("SELECT * FROM wetter;")
+		cursor.execute("SELECT * FROM kleidung;")
 		tables_content = cursor.fetchall()
 
 		print("Tabellen:")
