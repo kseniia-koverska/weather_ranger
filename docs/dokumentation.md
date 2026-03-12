@@ -308,10 +308,17 @@ Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der 
 
 ## 12. Installation
 
+**Warum lokal installieren und nicht in AppData?**  
+- Pakete werden **nur für dieses Projekt** installiert, nicht global für alle Python-Projekte.  
+- Verhindert Konflikte zwischen verschiedenen Projekten, die unterschiedliche Versionen von Flask oder anderen Paketen brauchen.  
+- Macht das Projekt **portabel**: Kollegen können die Abhängigkeiten einfach in ihrem eigenen venv installieren.  
+- Globale Installation in AppData kann zu **unerwarteten Fehlern** führen, wenn andere Projekte oder Tools andere Versionen der Pakete erwarten.  
+
 1. python -m venv venv - in root des Projekts (weather_ranger Ordner), der Befehl erstellt den Ordner der lokalen Umgebung
 2. venv\Scripts\activate - der Befehl aktiviert die lokale Umgebung (danach sieht man (venv) vor dem Verzeichnis)
 3. pip install -r requirements.txt - lädt alle Abhängigkeiten (dependencies) 
 4. python app.py - startet lokaler Webserver
+
 
 ### App starten:
 
@@ -321,11 +328,23 @@ Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der 
 4. STRG (gedrückt halten) und auf http://127.0.0.1:5000/ klicken
 
 
-**Warum lokal installieren und nicht in AppData?**  
-- Pakete werden **nur für dieses Projekt** installiert, nicht global für alle Python-Projekte.  
-- Verhindert Konflikte zwischen verschiedenen Projekten, die unterschiedliche Versionen von Flask oder anderen Paketen brauchen.  
-- Macht das Projekt **portabel**: Kollegen können die Abhängigkeiten einfach in ihrem eigenen venv installieren.  
-- Globale Installation in AppData kann zu **unerwarteten Fehlern** führen, wenn andere Projekte oder Tools andere Versionen der Pakete erwarten.  
+### Arbeiten im Code-Editor:
+
+1. **Wichtig: In den root-Ordner wechseln! (weather_ranger)**
+2. Terminal öffnen (VSCode): 
+3. CTRL + SHIFT + Ö
+
+### Upload Github:
+
+1. **Wichtig: In den root-Ordner wechseln! (weather_ranger)**
+Funktioniert auch wenn venv aktiv
+2. git pull (um den aktuellen Stand herunterzuladen)
+3. git add . (um alles hinzuzufügen)
+oder:
+4. git add 'dateiname' (um einzel(ne) Datei(en) hinzuzufügen)
+5. git commit -m 'kurze Beschreibung was geändert wurde'
+6. git push
+
 
 
 ## 13. Fazit
