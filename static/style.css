@@ -7,7 +7,7 @@ body {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	height: 100vh;
+
 	margin: 0;
 	padding: 0;
 
@@ -29,12 +29,25 @@ form {
     background-color: transparent;
 
     width: 170px;
-    height: 120px;
+    height: 110px;
     border: none;
     cursor: pointer;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    padding-top: 43px;
     color: #2b6cb0;
+}
+.box1, .box2, .box3{
+    width: 500px;
+    margin: 30px auto;
+    padding: 25px;
+
+    background: rgba(255,255,255,0.2); /* halbtransparent */
+    backdrop-filter: blur(10px);
+
+    border-radius: 15px;
+
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }

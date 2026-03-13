@@ -1,36 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>WEATHER RANGERS</title>
+
+	<title>🌞 WEATHER RANGERS 🌞</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-	<link rel="stylesheet" href="../../static/style.css">
 </head>
+
 <body>
 
-<h1>deine wetter-helfer</h1>
+<br>
 
-<form method="POST">
+<div class="box1">
+<h1>deine wetter-helfer</h1>
 
 <p>
 mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
 anhand deines standorts entsprechende kleidungsempfehlungen <br>
-ausgeben lassen. <br><br>
+ausgeben lassen.
+</p>
+</div>
 
-gib hier deinen standort an und es kann losgehen:
-<input type="text" name="standort" required placeholder="Berlin">
+<div class="box2">
+
+<form method="POST">
+
+<p>
+gib hier deinen standort an und es kann losgehen:<br><br>
+
+<input type="text" name="standort" required placeholder="Berlin"
+oninvalid="this.setCustomValidity('Bitte gib einen Standort ein!')"
+oninput="this.setCustomValidity('')">
 </p>
 
 <p>
-du brauchst eine empfehlung für die nächsten tage?<br>
-gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
-<input type="date" name="datum" required>
-<input type="time" id="uhrzeit" name="uhrzeit" required>
-<p>
 
-<button type="submit">empfehlung abrufen</button>
+gib hier ein beliebiges datum/uhrzeit an und erhalte deine vorhersage:<br><br>
+<input type="date" name="datum" required
+oninvalid="this.setCustomValidity('Bitte gib ein Datum ein!')"
+oninput="this.setCustomValidity('')">
+
+<input type="time" id="uhrzeit" name="uhrzeit" required
+oninvalid="this.setCustomValidity('Bitte gib eine Uhrzeit ein!')"
+oninput="this.setCustomValidity('')">
+</p>
+
+<button type="submit" class="cloud-btn">empfehlung abrufen</button>
+
 </form>
+
+</div>
+
 <!-- TESTING -->
+
+<div class="box3">
+
 <h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
+
 {% if submits %}
 <p>Datum: {{ submits[0][0] }}</p>
 <p>Uhrzeit: {{ submits[0][1] }}</p>
@@ -40,12 +65,16 @@ gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
 {% endif %}
 
 <h2>API-CALL Response:</h2>
+
 {% if api_response %}
 <p> {{ api_response }} </p>
 {% endif %}
+
 <p>Empfehlung Oberteil: {{ empfehlung_oberteil }}</p>
 <p>Empfehlung Kopfbedeckung: {{ empfehlung_kopf }}</p>
 <!-- TESTING -->
+
+</div>
 
 </body>
 </html>
