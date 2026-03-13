@@ -137,47 +137,54 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 ## 8. Frontend
 Im Frontend-Bereich der Anwendung werden die Struktur der Webseite sowie die Darstellung im Browser umgesetzt. Dafür wird mithilfe des Python-Frameworks Flask eine Webanwendung erstellt.
 
-8.1 Projektordner Wetter erstellen
+### 8.1 Projektordner Wetter erstellen
+
 Für die Anwendung wird ein Projektordner namens Wetter angelegt.
 
-mkdir Wetter
-cd Wetter
+**mkdir Wetter**
+**cd Wetter**
 
 Der Ordner Wetter enthält später alle Dateien der Webanwendung.
 
-8.2. Ordnerstruktur anlegen
+### 8.2. Ordnerstruktur anlegen
+
 Für eine Flask-App werden bestimmte Ordner benötigt.
 
-mkdir static
-mkdir templates
+**mkdir static**
+**mkdir templates**
 
-static: Enthält statische Dateien.
-templates: Enthält HTML-Dateien der Webseite, die vom Server geladen und im Browser angezeigt werden.
+**static:** Enthält statische Dateien.
+**templates:** Enthält HTML-Dateien der Webseite, die vom Server geladen und im Browser angezeigt werden.
 
-8.3. Python-Datei erstellen
+### 8.3. Python-Datei erstellen
+
 Als nächstes wird die Hauptdatei der Anwendung erstellt.
 
-notepad app.py
+**notepad app.py**
 
 In dieser Datei wird später der Flask-Server programmiert, der die Webseite bereitstellt.
 
-8.4. Python installieren
+### 8.4. Python installieren
+
 Falls Python noch nicht installiert ist, muss es zuerst installiert werden. Nach der Installation muss noch überprüft werden, ob Python korrekt funktioniert.
 
-python
+**python**
 
 Startet die Python-Konsole nun, war die Installation erfolgreich.
 
-8.5. Flask installieren
+### 8.5. Flask installieren
+
 Das Webframework Flask wird über die Eingabeaufforderung installiert.
 
-pip install flask
+**pip install flask**
 
 Flask wird benötigt, um den Webserver zu erstellen und HTML-Seiten an den Browser zu senden. Dadurch kann die Benutzeroberfläche der WEATHER-RANGERS-App angezeigt werden.
 
-8.6. Flask-Anwendung programmieren
+### 8.6. Flask-Anwendung programmieren
+
 In der Datei app.py wird der Webserver der Anwendung erstellt. Hierfür wird das Python-Framework Flask verwendet.
 
+```
 from flask import Flask, render_template
 app = Flask(__name__)
 
@@ -187,47 +194,64 @@ def home():
 
 if __name__ == "__main__":
 	app.run(debug=True)
+  ```
 
 Erklärung des Codes:
+
+```
 from flask Import Flask, render_template
+```
 
 Importiert das Flask-Framework und die Funktion render_template, mit der HTML-Dateien geladen werden können.
 
+```
 app = Flask(__name__)
+```
 
 Erstellt die Flask-Anwendung.
 
+```
 @app.route("/")
+```
 
 Legt fest, dass beim Aufruf der Startseite(/) die folgende Funktion ausgeführt wird.
 
+```
 def home():
+```
 
 Diese Funktion wird ausgeführt, wenn die Startseite aufgerufen wird.
 
+```
 return render_template("index.html")
+```
 
 Die HTML-Datei index.html aus dem Ordner templates wird geladen und an den Browser gesendet.
 
+```
 app.run(debug=True)
+```
 
 Startet den Webserver im Debug-Modus. Änderungen im Code werden dadurch automatisch erkannt.
 
-8.7. Webserver starten
+### 8.7. Webserver starten
+
 Nach der Erstellung der Anwendung kann der Server über die Eingabeaufforderung gestartet werden.
 
-python app.py
+**python app.py**
 
 Wurde der Server erfolgreich gestartet, erscheint in der Konsole eine Meldung mit einer lokalen Webadresse.
 
-8.8. Webseite im Browser öffnen
+### 8.8. Webseite im Browser öffnen
+
 Gibt man die folgende Adresse im Browser ein, wird die Webseite aufgerufen:
 
 http://127.0.0.1:5000
 
 Der Flask-Server lädt nun die Datei index.html aus dem Ordner templates und zeigt sie im Browser an.
 
-8.9. HTML-Struktur der Startseite
+### 8.9. HTML-Struktur der Startseite
+
 Die Datei index.html beinhaltet die Struktur der Startseite der WEATHER-RANGERS-App.
 
 
@@ -240,6 +264,50 @@ Danach wurde die Datenbank integriert, um passende Kleidungsempfehlungen anhand 
 Abschließend wurde das Ergebnis wieder an das Frontend zurückgegeben und im Browser angezeigt.
 
 ## 10. Tests
+
+### Test Case 1: Kleidungsempfehlung nach Temperatur
+**Testziel:**
+Überprüfung, ob die Anwendung passende Kleidungsempfehlungen für verschiedene Temperaturbereiche aus der Datenbank zurückgibt.
+
+**Voraussetzungen:**
+
+Die Flask-Anwendung läuft lokal.
+
+Die Datenbank wetter.db ist vorhanden.
+
+Die Wetter-API ist erreichbar.
+
+**Testmethode**
+
+Da die API nur reale Wetterdaten zurückgibt, wurde für Testzwecke eine feste Temperatur im Backend gesetzt.
+
+```
+temperature = api_response[0]["Temperatur"]
+
+# Testwert
+temperature = 12
+```
+Durch Änderung dieses Wertes konnten verschiedene Wetterbedingungen simuliert werden, um die Empfehlungen für unterschiedliche Wetterbedingungen zu testen.
+
+Beispiele der Testwerte:
+
+- -18 °C – sehr kaltes Wetter
+
+- -5 °C – kaltes Wetter
+
+- 3 °C – nahe 0 °C
+
+- 8 °C – kühles Wetter
+
+- 12 °C – mildes Wetter
+
+- 18 °C – warmes Wetter
+
+- 25 °C – heißes Wetter
+
+Für jeden Testwert wurde überprüft, ob die Anwendung passende Kleidungsempfehlungen aus der Datenbank zurückgibt.
+
+Nach Abschluss der Tests wurde die manuell gesetzte Temperatur entfernt, sodass die Anwendung wieder die reale Temperatur aus der API verwendet.
 
 ## 11. Fehlerbehandlung
 
