@@ -144,12 +144,17 @@ def init_db():
 		
 		print("Succesfully connected to", DB_NAME)
 
+		# Test welche Tabellen gibt es?
+
 		#cursor.execute("SELECT * FROM sqlite_master WHERE type='table';")
 		#tables = cursor.fetchall()
+		#print("Tabellen:")
+		#for table in tables:
+		#	print(table)
 
-		#cursor.execute("SELECT k.name AS Kleidungsstück, k.kategorie AS Kategorie, w.min_temp AS Min_Temperatur, w.max_temp AS Max_Temperatur, w.wetter_typ AS Wetterzustand FROM kleidung k JOIN wetter_regeln w ON k.id = w.kleidung_id WHERE 25 BETWEEN w.min_temp AND w.max_temp ORDER BY k.kategorie;")
-		#tables_content = cursor.fetchall()
 
+		# Test SQL-Statement (Temp: 0 - 5 Grad, Kategorie "Oberteil")
+		'''
 		cursor.execute("""
 						SELECT 
 							k.name AS Kleidungsstück, 
@@ -172,9 +177,7 @@ def init_db():
 						""")
 		
 		kleidungsteile = cursor.fetchall()
-		#print("Tabellen:")
-		#for table in tables:
-		#	print(table)
+
 
 		#print("Tabelleninhalt:", tables_content)
 		print("Kleidung bei 0°C bis 5°C:")
@@ -185,6 +188,8 @@ def init_db():
 		print("Daten aus db_empfehlung_items Funktion:")
 		empfehlung = db_empfehlung_items(0, 5, 'Oberteil')
 		print(empfehlung)
+
+		'''
 
 
 	except sqlite3.Error as e:
@@ -235,54 +240,67 @@ def home():
 
 		temperature = api_response[0]["Temperatur"]
 
+		kleidungs_kategorien = ['Oberteile', 'Hose', 'Accessoire', 'Schuhe']
+		temp_intervalle = []
+
+		# To Do: Vereinfachung IF-Block mit einer Funktion
+		def empfehlung_frontend(temp_intervals, kategorien):
+			pass
+
+
 		if -20 <= temperature < -15:
-			empfehlung_oberteil = ''
-			empfehlung_kopfbedeckung = ''
-			empfehlung_hose = ''
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif -15 <= temperature < -10:
-			empfehlung_oberteil = ''
-			empfehlung_kopfbedeckung = ''
-			empfehlung_hose = ''
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif -10 <= temperature < -5:
-			empfehlung_oberteil = ''
-			empfehlung_kopfbedeckung = ''
-			empfehlung_hose = ''
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif -5 <= temperature < 0:
-			empfehlung_oberteil = ''
-			empfehlung_kopfbedeckung = ''
-			empfehlung_hose = ''
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif 0 <= temperature < 5:
-			empfehlung_oberteil = "Winter Jacke + dicker Pullover"
-			empfehlung_kopfbedeckung = 'Mütze + Schal'
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif 5 <= temperature < 10:
-			empfehlung_oberteil = "Winter Jacke / dicker Pullover"
-			empfehlung_kopfbedeckung = 'Mütze + Schal'
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif 10 <= temperature <= 15:
-			empfehlung_oberteil = db_empfehlung_items(10,15,'Oberteil')
-			empfehlung_kopfbedeckung = 'Mütze + Schal'
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif 15 < temperature < 20:
-			empfehlung_oberteil = "dünner Pullover oder leichte Jacke möglich"
-			empfehlung_kopfbedeckung = 'Mütze + Schal'
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		elif temperature > 20:
-			empfehlung_oberteil = "T-Shirt / leichte Kleidung"
-			empfehlung_kopfbedeckung = 'Mütze + Schal'
-			empfehlung_schuhe = ''
+			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
 			empfehlung_sonnenbrille = False
 		
 
