@@ -1,17 +1,22 @@
 body {
-    	background-color: lightblue;
-    	font-family: Arial, sans-serif;
+    background-color: lightblue;
+    font-family: Arial, sans-serif;
 	color: #2b6cb0;
 	text-align: center;
+
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 
+
+	height: 100vh;
+
 	margin: 0;
-	padding: 0;
+	padding: 1em;
 
 }
+
 
 form {
 	display: flex;
@@ -19,6 +24,10 @@ form {
 	align-items: center;
 	gap: 15px;
 	margin-top: 20px;
+}
+
+h1 {
+	margin: auto
 }
 
 .cloud-btn {
@@ -39,6 +48,7 @@ form {
     padding-top: 43px;
     color: #2b6cb0;
 }
+
 .box1, .box2, .box3{
     width: 500px;
     margin: 30px auto;
@@ -50,4 +60,13 @@ form {
     border-radius: 15px;
 
     box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+
+
+.empfehlung {
+	text-align: start;
+	background-color: aliceblue;
+	border: 1px dashed white;
+	display: none;
+	padding: 2px;
+
 }

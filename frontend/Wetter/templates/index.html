@@ -8,6 +8,7 @@
 
 <body>
 
+
 <br>
 
 <div class="box1">
@@ -54,6 +55,34 @@ oninput="this.setCustomValidity('')">
 
 <div class="box3">
 
+
+
+<h1>deine wetter-helfer</h1>
+
+<div class="input_form">
+	<form method="POST">
+		<p>
+		mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
+		anhand deines standorts entsprechende kleidungsempfehlungen <br>
+		ausgeben lassen. <br><br>
+
+		gib hier deinen standort an und es kann losgehen:
+		<select id="stadt" name="standort">
+		<option value="berlin">Berlin</option>
+		</select>
+		</p>
+
+
+		<p>du brauchst eine empfehlung für die nächsten tage?<br>
+		gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
+		<input type="date" name="datum" required>
+		<input type="time" id="uhrzeit" name="uhrzeit" required>
+		</p>
+		<button id="api-btn" class="cloud-btn" type="submit">empfehlung abrufen</button>
+	</form>
+</div>
+<!-- TESTING 
+
 <h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
 
 {% if submits %}
@@ -63,6 +92,33 @@ oninput="this.setCustomValidity('')">
 {% else %}
 <p>Noch keine Einträge vorhanden.</p>
 {% endif %}
+-->
+
+<div id="empfehlung_display" class="empfehlung">
+	<div class="wetter-daten">
+		{% if api_response %}
+		<script>
+			var empfehlung = document.getElementById('empfehlung_display');
+			empfehlung.style.display = 'block';
+			console.log('test')
+		</script>
+			<p>Datum: {{ api_response[0].Datum }}</p>
+			<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
+			<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
+			<p>Regen: {{ api_response[0].Regen }} mm</p>
+			<p>Schnee: {{ api_response[0].Schnee }} cm</p>
+			<p>Wind: {{ api_response[0].Wind }} km/h</p>
+		{% endif %}
+	</div>
+	<div class="kleider-empfehlung">
+		<p>Oberteil: {{ empfehlung_oberteil | join(', ') }}</p>
+		<p>Hose: {{ empfehlung_hose | join(', ') }}</p>
+		<p>Schuhe: {{ empfehlung_schuhe | join(', ') }}</p>
+		<p>Accessoires: {{ empfehlung_accessoire | join(', ') }}</p>
+	</div>
+</div>
+
+
 
 <h2>API-CALL Response:</h2>
 
@@ -73,6 +129,7 @@ oninput="this.setCustomValidity('')">
 <p>Empfehlung Oberteil: {{ empfehlung_oberteil }}</p>
 <p>Empfehlung Kopfbedeckung: {{ empfehlung_kopf }}</p>
 <!-- TESTING -->
+
 
 </div>
 
