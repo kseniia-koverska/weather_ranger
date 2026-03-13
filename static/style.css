@@ -38,3 +38,11 @@ form {
     align-items: center;
     color: #2b6cb0;
 }
+
+.empfehlung {
+	align-content: normal;
+	background-color: aliceblue;
+	border: 1px solid black;
+	display: none;
+	padding: 1em;
+}

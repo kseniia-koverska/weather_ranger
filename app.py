@@ -144,6 +144,7 @@ def init_db():
 		
 		print("Succesfully connected to", DB_NAME)
 
+
 		# Test welche Tabellen gibt es?
 
 		#cursor.execute("SELECT * FROM sqlite_master WHERE type='table';")
@@ -154,7 +155,7 @@ def init_db():
 
 
 		# Test SQL-Statement (Temp: 0 - 5 Grad, Kategorie "Oberteil")
-		'''
+
 		cursor.execute("""
 						SELECT 
 							k.name AS Kleidungsstück, 
@@ -186,10 +187,10 @@ def init_db():
 			print(item[0])
 		
 		print("Daten aus db_empfehlung_items Funktion:")
-		empfehlung = db_empfehlung_items(0, 5, 'Oberteil')
+		empfehlung = db_empfehlung_items(10, 15, 'Oberteil')
 		print(empfehlung)
 
-		'''
+
 
 
 	except sqlite3.Error as e:
@@ -213,9 +214,9 @@ form_submits = []
 def home():
 	print("Python is used from:", sys.executable)
 
-	api_response = ['Test']
+	api_response = []
 	empfehlung_oberteil = ''
-	empfehlung_kopfbedeckung = ''
+	empfehlung_accessoire = ''
 	empfehlung_hose = ''
 	empfehlung_schuhe = ''
 	empfehlung_sonnenbrille = False
@@ -249,63 +250,64 @@ def home():
 
 
 		if -20 <= temperature < -15:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(-20, -15, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-20, -15, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-20, -15, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-20, -15, 'Schuhe')
 			empfehlung_sonnenbrille = False
+		
 		elif -15 <= temperature < -10:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(-15, -10, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-15, -10, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-15, -10, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-15, -10, 'Schuhe')
 			empfehlung_sonnenbrille = False
+		
 		elif -10 <= temperature < -5:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(-10, -5, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-10, -5, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-10, -5, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-10, -5, 'Schuhe')
 			empfehlung_sonnenbrille = False
+		
 		elif -5 <= temperature < 0:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(-5, 0, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(-5, 0, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(-5, 0, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(-5, 0, 'Schuhe')
 			empfehlung_sonnenbrille = False
-		elif 0 <= temperature < 5:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+		
+		elif 0 <= temperature < 10:
+			empfehlung_oberteil = db_empfehlung_items(0, 10, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(0, 10, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(0, 10, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(0, 10, 'Schuhe')
 			empfehlung_sonnenbrille = False
-		elif 5 <= temperature < 10:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
-			empfehlung_sonnenbrille = False
+		
 		elif 10 <= temperature <= 15:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(10, 15, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(10, 15, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(10, 15, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(10, 15, 'Schuhe')
 			empfehlung_sonnenbrille = False
+		
 		elif 15 < temperature < 20:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
+			empfehlung_oberteil = db_empfehlung_items(15, 20, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(15, 20, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(15, 20, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(15, 20, 'Schuhe')
 			empfehlung_sonnenbrille = False
-		elif temperature > 20:
-			empfehlung_oberteil = db_empfehlung_items(-20,-15,'Oberteil')
-			empfehlung_accessoire = db_empfehlung_items(-20,-15,'Accessoire')
-			empfehlung_hose = db_empfehlung_items(-20,-15,'Hose')
-			empfehlung_schuhe = db_empfehlung_items(-20,-15,'Schuhe')
-			empfehlung_sonnenbrille = False
+		
+		elif temperature >= 20:
+			empfehlung_oberteil = db_empfehlung_items(20, 100, 'Oberteil')
+			empfehlung_accessoire = db_empfehlung_items(20, 100, 'Accessoire')
+			empfehlung_hose = db_empfehlung_items(20, 100, 'Hose')
+			empfehlung_schuhe = db_empfehlung_items(20, 100, 'Schuhe')
+			empfehlung_sonnenbrille = True
 		
 
 
-	return render_template("index.html", submits=form_submits, api_response=api_response, empfehlung_oberteil=empfehlung_oberteil)
+	return render_template("index.html", submits=form_submits, api_response=api_response, empfehlung_oberteil=empfehlung_oberteil, empfehlung_hose=empfehlung_hose, empfehlung_schuhe=empfehlung_schuhe, empfehlung_accessoire=empfehlung_accessoire)
 
 if __name__ == "__main__":
 	init_db()
