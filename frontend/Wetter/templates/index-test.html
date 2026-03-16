@@ -47,8 +47,8 @@ ausgeben lassen.
 
 		<p>du brauchst eine empfehlung für die nächsten tage?<br>
 		gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
-		<input type="date" name="datum" required>
-		<input type="time" id="uhrzeit" name="uhrzeit" required>
+		<input type="date" name="datum" value="{{ datum_aktuell }}">
+		<input type="time" id="uhrzeit" name="uhrzeit" value="{{ uhrzeit_aktuell }}">
 		</p>
 		<button id="api-btn" class="cloud-btn" type="submit">empfehlung abrufen</button>
 	</form>
@@ -81,6 +81,7 @@ ausgeben lassen.
 			empfehlung.style.display = 'block';
 			console.log('test')
 		</script>
+			<h2>{{ stadtname }}</h2>
 			<p>Datum: {{ api_response[0].Datum }}</p>
 			<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
 			<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>

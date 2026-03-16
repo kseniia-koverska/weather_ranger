@@ -1,10 +1,15 @@
 from flask import Flask, flash, render_template, request
+from datetime import datetime
 import requests
 import sqlite3
 import secrets
 import json
 
 from app import form_submits
+
+# cd .\weather_app\weather_ranger\ (nur für Niklas)
+# venv\Scripts\activate
+# py app.py
 
 app = Flask(__name__, template_folder='frontend/Wetter/templates')
 app.secret_key = secrets.token_hex(32)
@@ -97,12 +102,16 @@ def db_empfehlung_items(temperature):
 
 @app.route("/", methods=["GET","POST"])
 def home():
+	datum_aktuell = datetime.now().strftime("%Y-%m-%d")
+	uhrzeit_aktuell = datetime.now().strftime("%H:%M")
 	form_submits = []
+	stadtname = ""
 	api_response = []
 	result = []
 	
 	if request.method == "POST":
 		standort = json.loads(request.form["standort"])
+		stadtname = standort["name"]
 		datum = request.form["datum"]
 		zeit = request.form["uhrzeit"]
 		stunde = int(zeit[:2])
@@ -114,7 +123,7 @@ def home():
 		#Für den Temperaturstest
 		result = db_empfehlung_items(-12)
 
-	return render_template("index-test.html", submits=form_submits, api_response=api_response, result=result, staedte=staedte)
+	return render_template("index-test.html", submits=form_submits, datum_aktuell=datum_aktuell, uhrzeit_aktuell=uhrzeit_aktuell, stadtname=stadtname, api_response=api_response, result=result, staedte=staedte)
 
 if __name__ == "__main__":
 	app.run(debug=True)

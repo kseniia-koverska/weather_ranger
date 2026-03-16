@@ -6,9 +6,7 @@ app = Flask(__name__, template_folder='frontend/Wetter/templates')
 
 # START SERVER:
 
-# cd .\weather_app\weather_ranger\ (nur für Niklas)
-# venv\Scripts\activate
-# py app.py
+
 
 # venv verlassen: deactivate
 
