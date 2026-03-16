@@ -3,31 +3,25 @@ body {
     font-family: Arial, sans-serif;
 	color: #2b6cb0;
 	text-align: center;
-
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-
-
-	height: 100vh;
-
 	margin: 0;
-	padding: 1em;
-
 }
 
-
-form {
-	display: flex;
+.input-form {
+    display: flex;
 	flex-direction: column;
-	align-items: center;
-	gap: 15px;
-	margin-top: 20px;
+    justify-content: center;
 }
 
 h1 {
-	margin: auto
+	margin: auto;
+    font-family: 'Fredoka', Arial, sans-serif;
+    font-size: 30px;
+    letter-spacing: 2px;
+    color: #2b6cb0;
+}
+
+h2 {
+    margin: auto;
 }
 
 .cloud-btn {
@@ -41,10 +35,7 @@ h1 {
     height: 110px;
     border: none;
     cursor: pointer;
-
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    text-align: center;
     padding-top: 43px;
     color: #2b6cb0;
 }
@@ -54,19 +45,47 @@ h1 {
     margin: 30px auto;
     padding: 25px;
 
-    background: rgba(255, 255, 255, 0.2); /* halbtransparent */
+    background-color: aliceblue;
     backdrop-filter: blur(10px);
 
     border-radius: 15px;
 
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
+.input-group {
+    margin: auto;
+    font-family: 'Fredoka', Arial, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.input-group select,
+.input-group input {
+  border: none;
+  padding: 8px 12px;
+  outline: none;
+  font-size: 14px;
+}
+
+.input-group select:not(:last-child),
+.input-group input:not(:last-child) {
+  border-right: 1px solid #ccc;
+}
+
+.description {
+	text-align: start;
+    margin: 15px;
+	background-color: white;
+	border: 1px solid #2b6cb0;
+	padding: 10px;
+}
 
 .empfehlung {
-	text-align: start;
-	background-color: aliceblue;
-	border: 1px dashed white;
+	background-color: white; 
+	border: 2px dashed rgb(102, 7, 255);
+    border-radius: 15px;
 	display: none;
-	padding: 2px;
-
+	padding: 10px;
 }
