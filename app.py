@@ -240,6 +240,8 @@ def home():
 		api_response = apiCall('52.52', '13.41', datum, stunde)
 
 		temperature = api_response[0]["Temperatur"]
+		# Testtemperatur
+		temperature = -12
 
 		kleidungs_kategorien = ['Oberteile', 'Hose', 'Accessoire', 'Schuhe']
 		temp_intervalle = []

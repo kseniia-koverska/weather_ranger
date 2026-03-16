@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>🌞 WEATHER RANGERS 🌞</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+
+<br>
+
+<div class="box1">
+<h1>deine wetter-helfer</h1>
+
+<p>
+mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
+anhand deines standorts entsprechende kleidungsempfehlungen <br>
+ausgeben lassen.
+</p>
+</div>
+
+<!-- TESTING -->
+
+<div class="box3">
+
+
+
+<h1>deine wetter-helfer</h1>
+
+<div class="input_form">
+	<form method="POST">
+		<p>
+		mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
+		anhand deines standorts entsprechende kleidungsempfehlungen <br>
+		ausgeben lassen. <br><br>
+
+		gib hier deinen standort an und es kann losgehen:
+		<select id="stadt" name="standort">
+			{% for stadt in staedte %}
+      			<option value='{{ stadt | tojson }}'>{{ stadt.name }}</option>
+    		{% endfor %}
+		</select>
+		</p>
+
+
+		<p>du brauchst eine empfehlung für die nächsten tage?<br>
+		gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
+		<input type="date" name="datum" required>
+		<input type="time" id="uhrzeit" name="uhrzeit" required>
+		</p>
+		<button id="api-btn" class="cloud-btn" type="submit">empfehlung abrufen</button>
+	</form>
+</div>
+	{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      <div class="flash">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+<!-- TESTING 
+
+<h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
+
+{% if submits %}
+<p>Datum: {{ submits[0][0] }}</p>
+<p>Uhrzeit: {{ submits[0][1] }}</p>
+<p>Stunde: {{ submits[0][1][:2] }}</p>
+{% else %}
+<p>Noch keine Einträge vorhanden.</p>
+{% endif %}
+-->
+
+<div id="empfehlung_display" class="empfehlung">
+	<div class="wetter-daten">
+		{% if api_response %}
+		<script>
+			var empfehlung = document.getElementById('empfehlung_display');
+			empfehlung.style.display = 'block';
+			console.log('test')
+		</script>
+			<p>Datum: {{ api_response[0].Datum }}</p>
+			<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
+			<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
+			<p>Regen: {{ api_response[0].Regen }} mm</p>
+			<p>Schnee: {{ api_response[0].Schnee }} cm</p>
+			<p>Wind: {{ api_response[0].Wind }} km/h</p>
+		{% endif %}
+	</div>
+	<div class="kleider-empfehlung">
+		{% for item in result %}
+			<p>{{ item.kategorie }}: {{ item.name }}</p>
+		{% endfor %}
+	</div>
+</div>
+
+
+
+<h2>API-CALL Response:</h2>
+
+{% if api_response %}
+<p> {{ api_response }} </p>
+{% endif %}
+
+<p>Empfehlung Oberteil: {{ empfehlung_oberteil }}</p>
+<p>Empfehlung Kopfbedeckung: {{ empfehlung_kopf }}</p>
+<!-- TESTING -->
+
+
+</div>
+
+</body>
+</html>

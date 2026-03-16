@@ -49,18 +49,18 @@ h1 {
     color: #2b6cb0;
 }
 
-.box1, .box2, .box3{
+.box1, .box2, .box3 {
     width: 500px;
     margin: 30px auto;
     padding: 25px;
 
-    background: rgba(255,255,255,0.2); /* halbtransparent */
+    background: rgba(255, 255, 255, 0.2); /* halbtransparent */
     backdrop-filter: blur(10px);
 
     border-radius: 15px;
 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
 
 .empfehlung {
 	text-align: start;
