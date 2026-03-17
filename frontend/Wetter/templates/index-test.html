@@ -36,7 +36,7 @@
 						<option value='{{ stadt | tojson }}'>{{ stadt.name }}</option>
 					{% endfor %}
 				</select>
-				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}">
+				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}" min="{{ min_date }}" max="{{ max_date }}">
 				<input type="time" class="time-input" name="uhrzeit" value="{{ uhrzeit_aktuell }}">
 			</div>
 			<button id="api-btn" class="cloud-btn" type="submit"><strong>Was zieh ich an?</strong></button>
@@ -83,6 +83,15 @@
 						{% for item in result %}
 						<p>{{ item.kategorie }}: {{ item.name }}</p>
 						{% endfor %}
+						{% if sunglasses %}
+						<p>Sonnenbrille mitnehmen 😎</p>
+						{% endif %}
+						{% if rain_kleidung %}
+						<p>Regenschirm mitnehmen ☂️</p>
+						{% endif %}
+						{% if snow_kleidung %}
+						<p>Ski Wetter ⛷️</p>
+						{% endif %}
 					</div>
 				</div>
 			{% endif %}

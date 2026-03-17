@@ -1,11 +1,15 @@
 from flask import Flask, flash, render_template, request
-from datetime import datetime
+from datetime import datetime, timedelta
+
 import requests
 import sqlite3
 import secrets
 import json
 
+
 from app import form_submits
+
+
 
 # cd .\weather_app\weather_ranger\ (nur für Niklas)
 # venv\Scripts\activate
@@ -27,6 +31,12 @@ staedte = [
 	{"name": "Leipzig", "Latitude": 51.3397, "Longitude": 12.3731}
 ]
 
+# Variablen für Empfehlungen bezogen auf Regen, Sonne, Schnee:
+
+rain_kleidung = False
+snow_kleidung = False
+sunglasses = False
+
 def apiCall(latitude, longitude, date, time):
 	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
 	api_reply = []
@@ -41,6 +51,11 @@ def apiCall(latitude, longitude, date, time):
 		# Beispiel: für die Stunde 14:00 (2:00 PM)
 		# Die "hourly" Daten sind in Stunden-Verzögerung, daher müssen wir die Stunde auf Stunden-Index in der Datenliste umrechnen
 		hourly_data = data['hourly']
+		daily_data = data['daily']
+
+		rains = hourly_data['rain'][hour_index]
+		snows = hourly_data['snowfall'][hour_index]
+		uv_index = daily_data['uv_index_max'][0]
 
 		api_reply.append({
 					"Datum" : date,
@@ -50,6 +65,15 @@ def apiCall(latitude, longitude, date, time):
 					"Schnee" : hourly_data['snowfall'][hour_index],
 					"Wind" : hourly_data['wind_speed_10m'][hour_index]
 					})
+		# checken ob es regnet
+		if rains > 0.0:
+			rain_kleidung = True
+		
+		if snows > 0.0:
+			snow_kleidung = True
+		
+		if uv_index > 3:
+			sunglasses = True
 
 	except:
 		flash("Wetterdaten konnten nicht geladen werden", "error")
@@ -107,11 +131,15 @@ def date_de(value):
 @app.route("/", methods=["GET","POST"])
 def home():
 	datum_aktuell = datetime.now().strftime("%Y-%m-%d")
+	now = datetime.now()
 	uhrzeit_aktuell = datetime.now().strftime("%H:%M")
+	min_date = (now - timedelta(days=7)).strftime("%Y-%m-%d")
+	max_date = (now + timedelta(days=7)).strftime("%Y-%m-%d")
 	form_submits = []
 	stadtname = ""
 	api_response = []
 	result = []
+
 	
 	if request.method == "POST":
 		standort = json.loads(request.form["standort"])
@@ -121,14 +149,29 @@ def home():
 		stunde = int(zeit[:2])
 		form_submits.append((datum, zeit))
 
+
+
 		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
 
 		#result = db_empfehlung_items(api_response[0]["Temperatur"])
 		#Für den Temperaturstest
 		result = db_empfehlung_items(-12)
 
-	return render_template("index-test.html", submits=form_submits, datum_aktuell=datum_aktuell, uhrzeit_aktuell=uhrzeit_aktuell, stadtname=stadtname, api_response=api_response, result=result, staedte=staedte)
-
+	return render_template(
+		"index-test.html",
+		submits=form_submits,
+		datum_aktuell=datum_aktuell,
+		min_date=min_date,
+		max_date=max_date,
+		uhrzeit_aktuell=uhrzeit_aktuell,
+		stadtname=stadtname,
+		api_response=api_response,
+		rain_kleidung=rain_kleidung,
+		snow_kleidung=snow_kleidung,
+		sunglasses=sunglasses,
+		result=result,
+		staedte=staedte
+	)
 if __name__ == "__main__":
 	app.run(debug=True)
 
