@@ -1,9 +1,27 @@
 body {
-    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    background-color: aliceblue;
+    background-image: url('frog.jpg');
+    background-size:cover;
     font-family: Arial, sans-serif;
 	color: #2b6cb0;
 	text-align: center;
 	margin: 0;
+}
+
+
+/* Bewegung */
+@keyframes float {
+  0% {
+    transform: translate(0,0) scale(1);
+  }
+  50% {
+    transform: translate(120px,-80px) scale(1.2);
+  }
+  100% {
+    transform: translate(-100px,100px) scale(0.9);
+  }
 }
 
 .input-form {
@@ -15,9 +33,15 @@ body {
 h1 {
 	margin: auto;
     font-family: 'Fredoka', Arial, sans-serif;
-    font-size: 30px;
+    font-size: 40px;
+
+      text-shadow:
+    -1px -1px 0 #2b6cb0,
+     1px -1px 0 #2b6cb0,
+    -1px  1px 0 #2b6cb0,
+     1px  1px 0 #2b6cb0;
     letter-spacing: 2px;
-    color: #2b6cb0;
+    color: white;
 }
 
 h2 {
@@ -42,15 +66,18 @@ h2 {
 }
 
 .box1, .box2, .box3 {
+    top: 20px;
+    position: relative;
     width: 500px;
-    margin: 30px auto;
+    margin: auto;
     padding: 25px;
+    border-style: 3px solid #2b6cb0;
 
     background-color: aliceblue;
     backdrop-filter: blur(10px);
 
     border-radius: 15px;
-
+    
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 .input-group {
@@ -76,18 +103,21 @@ h2 {
 }
 
 .description {
+
+    border: 2px solid #ccc;
 	text-align: start;
     line-height: 20px;
+    border-radius: 15px;
+    margin-top: 30px;
     margin: 15px;
 	background-color: white;
-	border: 1px solid #2b6cb0;
-	padding: 10px;
+	padding: 15px;
 }
 
 .empfehlung {
 	background-color: white; 
-	border: 2px dashed rgb(102, 7, 255);
+	border: 2px dashed #2b6cb0;
     border-radius: 15px;
 	display: none;
-	padding: 10px;
+	padding: 15px;
 }

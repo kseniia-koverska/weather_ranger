@@ -19,7 +19,7 @@ app = Flask(__name__, template_folder='frontend/Wetter/templates')
 # long = '13.41'
 
 def apiCall(latitude, longitude, date, time):
-	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
+	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&past_days=7&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
 	response = requests.get(url)
 	hour_index = time 
 

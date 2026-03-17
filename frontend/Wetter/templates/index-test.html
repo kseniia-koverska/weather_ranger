@@ -12,14 +12,20 @@
 
 
 
-	<h1>Weather Ranger</h1>
+	<h1>  Weather Ranger </h1>
+
 
 	<div class="description">
 		Mithilfe von <strong>Weather Ranger</strong> kannst du 
-		anhand deines Standorts entsprechende kleidungsempfehlungen 
+		anhand deines Standorts entsprechende Kleidungsempfehlungen 
 		ausgeben lassen.
 		<br><br>
-		Du kannst zwischen Standorten wählen (Wetterdaten sind 5 Tage (?) voraus/nachhinein möglich):
+		Du kannst zwischen folgenden Standorten wählen: <br><br>
+		{% for stadt in staedte %}
+			{{ stadt.name }}{% if not loop.last %},{% endif %}
+		{% endfor %}
+		<br><br>
+		<i>(Wetter-Vorhersage/Rückschau: max. 7 Tage)</i>
 	</div>
 
 	<div class="input_form">
@@ -33,7 +39,7 @@
 				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}">
 				<input type="time" class="time-input" name="uhrzeit" value="{{ uhrzeit_aktuell }}">
 			</div>
-			<button id="api-btn" class="cloud-btn" type="submit">empfehlung abrufen</button>
+			<button id="api-btn" class="cloud-btn" type="submit"><strong>Was zieh ich an?</strong></button>
 		</form>
 	</div>
 		{% with messages = get_flashed_messages() %}
@@ -66,7 +72,7 @@
 				
 				<div class="wetter-daten" style="text-align:start">
 					<h2 style="margin:auto">{{ stadtname }}</h2>
-					<p>Datum: {{ api_response[0].Datum }}</p>
+					<p>Datum: {{ api_response[0].Datum | date_de}}</p>
 					<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
 					<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
 					<p>Regen: {{ api_response[0].Regen }} mm</p>

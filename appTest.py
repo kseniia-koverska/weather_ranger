@@ -100,6 +100,10 @@ def db_empfehlung_items(temperature):
 		flash("Datenbankverbindung fehlgeschlagen", "error")
 	return result
 
+@app.template_filter("date_de")
+def date_de(value):
+    return datetime.strptime(value, "%Y-%m-%d").strftime("%d.%m.%Y")
+
 @app.route("/", methods=["GET","POST"])
 def home():
 	datum_aktuell = datetime.now().strftime("%Y-%m-%d")
