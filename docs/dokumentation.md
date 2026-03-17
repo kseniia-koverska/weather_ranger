@@ -131,6 +131,49 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
     kleidung_id INTEGER,
     FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
    );
+   ### Entity-Relationship-Diagramm (ERD)
+
+  ![Entity-Relation-Diagramm](entity_relation_diagram_db.png)
+
+Zur Visualisierung der Datenbankstruktur wurde ein **Entity-Relationship-Diagramm (ERD)** erstellt.
+Für die Erstellung des Diagramms wurde das Tool [**dbdiagram.io**] (https://dbdiagram.io/home) verwendet, welches eine einfache und übersichtliche Darstellung relationaler Datenbanken ermöglicht.
+
+Das ERD zeigt die beiden zentralen Tabellen kleidung und wetter_regeln sowie deren Beziehung zueinander.
+
+### Beschreibung der Tabellenbeziehung
+
+Zwischen den Tabellen kleidung und wetter_regeln besteht eine 1:n-Beziehung (One-to-Many).
+
+Das bedeutet:
+
+Ein Kleidungsstück kann mehreren Wetterregeln zugeordnet sein
+
+Jede Wetterregel gehört jedoch genau zu einem Kleidungsstück
+
+Die Verbindung wird über den Fremdschlüssel kleidung_id in der Tabelle wetter_regeln realisiert. Dieser verweist auf den Primärschlüssel id der Tabelle kleidung.
+
+Dadurch ist sichergestellt, dass jede Wetterregel eindeutig einem existierenden Kleidungsstück zugeordnet ist.
+
+### Zusammenhang mit dem Programmcode
+
+Die definierte Beziehung wird direkt im Programmcode genutzt, um passende Kleidungsempfehlungen zu ermitteln.
+
+In der Funktion db_empfehlung_items wird eine SQL-Abfrage ausgeführt, die beide Tabellen miteinander verknüpft:
+
+```
+JOIN wetter_regeln w ON k.id = w.kleidung_id
+```
+
+Anschließend werden alle Wetterregeln gefiltert, deren Temperaturbereich zur aktuellen Temperatur passt:
+
+```
+w.min_temp <= temperatur AND w.max_temp >= temperatur
+```
+
+### Zusammenfassung
+
+Die Datenbank basiert auf einer klaren und einfachen Struktur mit zwei Tabellen, die über eine 1:n-Beziehung verbunden sind. Durch diese Verknüpfung können Wetterbedingungen effizient mit passenden Kleidungsstücken kombiniert werden. Die Logik der Empfehlung wird dabei dynamisch über die Datenbank gesteuert, was eine flexible Anpassung der Regeln ermöglicht.
+
 
 ## 7. Backend und API
 
