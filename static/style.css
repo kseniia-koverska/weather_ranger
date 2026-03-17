@@ -116,7 +116,8 @@ h2 {
 
 .empfehlung {
   display: none;
-  gap: 20px; 
+  grid-template-columns: 1fr 1fr;   /* links = rechts gleich breit */
+  grid-template-rows: 1fr 1fr; 
 	background-color: white; 
 	border: 2px dashed #2b6cb0;
     border-radius: 15px;
@@ -124,9 +125,16 @@ h2 {
 	padding: 15px;
 }
 
-.empfehlung > .wetter-daten.left,
-.empfehlung > .kleider-empfehlung.left,
-.empfehlung > .kleider-bilder.right {
-    flex: 1;
-    box-sizing: border-box;                       
+.kleider-empfehlung {
+  text-align: start;
+}
+
+.container-left {
+  flex: 1;
+}
+
+.container-right {
+  flex: 1;
+  margin-top: auto;
+  top: 20px;
 }

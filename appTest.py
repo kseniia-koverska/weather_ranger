@@ -31,11 +31,6 @@ staedte = [
 	{"name": "Leipzig", "Latitude": 51.3397, "Longitude": 12.3731}
 ]
 
-# Variablen für Empfehlungen bezogen auf Regen, Sonne, Schnee:
-
-rain_kleidung = False
-snow_kleidung = False
-sunglasses = False
 
 def apiCall(latitude, longitude, date, time):
 	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
@@ -53,27 +48,15 @@ def apiCall(latitude, longitude, date, time):
 		hourly_data = data['hourly']
 		daily_data = data['daily']
 
-		rains = hourly_data['rain'][hour_index]
-		snows = hourly_data['snowfall'][hour_index]
-		uv_index = daily_data['uv_index_max'][0]
-
 		api_reply.append({
 					"Datum" : date,
 					"Uhrzeit" : time,
 					"Temperatur" : hourly_data['temperature_2m'][hour_index],
 					"Regen" : hourly_data['rain'][hour_index],
 					"Schnee" : hourly_data['snowfall'][hour_index],
-					"Wind" : hourly_data['wind_speed_10m'][hour_index]
+					"Wind" : hourly_data['wind_speed_10m'][hour_index],
+					"UV" : daily_data['uv_index_max'][0]
 					})
-		# checken ob es regnet
-		if rains > 0.0:
-			rain_kleidung = True
-		
-		if snows > 0.0:
-			snow_kleidung = True
-		
-		if uv_index > 3:
-			sunglasses = True
 
 	except:
 		flash("Wetterdaten konnten nicht geladen werden", "error")
@@ -130,6 +113,17 @@ def date_de(value):
 
 @app.route("/", methods=["GET","POST"])
 def home():
+
+	# Variablen für Empfehlungen bezogen auf Regen, Sonne, Schnee:
+
+	rain_kleidung = False
+	snow_kleidung = False
+	sunglasses = False
+	rains = 0.0
+	uv_index = 0.00
+	url = ''
+
+
 	datum_aktuell = datetime.now().strftime("%Y-%m-%d")
 	now = datetime.now()
 	uhrzeit_aktuell = datetime.now().strftime("%H:%M")
@@ -166,9 +160,6 @@ def home():
 		uhrzeit_aktuell=uhrzeit_aktuell,
 		stadtname=stadtname,
 		api_response=api_response,
-		rain_kleidung=rain_kleidung,
-		snow_kleidung=snow_kleidung,
-		sunglasses=sunglasses,
 		result=result,
 		staedte=staedte
 	)
