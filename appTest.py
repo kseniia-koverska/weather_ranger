@@ -147,9 +147,9 @@ def home():
 
 		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
 
-		#result = db_empfehlung_items(api_response[0]["Temperatur"])
+		result = db_empfehlung_items(api_response[0]["Temperatur"])
 		#Für den Temperaturstest
-		result = db_empfehlung_items(-12)
+		#result = db_empfehlung_items(-12)
 
 	return render_template(
 		"index-test.html",
