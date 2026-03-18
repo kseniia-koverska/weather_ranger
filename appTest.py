@@ -1,11 +1,5 @@
 from flask import Flask, flash, render_template, request
 from datetime import datetime, timedelta
-<<<<<<< HEAD
-from geopy.geocoders import Nominatim # Import aus der Textdatei 
-import requests
-import sqlite3
-import secrets
-=======
 
 import requests
 import sqlite3
@@ -20,55 +14,23 @@ from app import form_submits
 # cd .\weather_app\weather_ranger\ (nur für Niklas)
 # venv\Scripts\activate
 # py app.py
->>>>>>> 54feb026f993f6deb96d1e3ad631a09d5cbbe6d5
 
 app = Flask(__name__, template_folder='frontend/Wetter/templates')
 app.secret_key = secrets.token_hex(32)
 
-# Initialisierung des Geolocators 
-# "user_agent" sollte eindeutig sein, damit der Dienst stabil läuft
-geolocator = Nominatim(user_agent="WeatherRanger_App_v1")
+staedte = [
+	{"name": "Berlin", "Latitude": 52.5200, "Longitude": 13.4050},
+	{"name": "Hamburg", "Latitude": 53.5511, "Longitude": 9.9937},
+	{"name": "München", "Latitude": 48.1351, "Longitude": 11.5820},
+	{"name": "Köln", "Latitude": 50.9375, "Longitude": 6.9603},
+	{"name": "Frankfurt am Main", "Latitude": 50.1109, "Longitude": 8.6821},
+	{"name": "Stuttgart", "Latitude": 48.7758, "Longitude": 9.1829},
+	{"name": "Düsseldorf", "Latitude": 51.2277, "Longitude": 6.7735},
+	{"name": "Dortmund", "Latitude": 51.5136, "Longitude": 7.4653},
+	{"name": "Essen", "Latitude": 51.4556, "Longitude": 7.0116},
+	{"name": "Leipzig", "Latitude": 51.3397, "Longitude": 12.3731}
+]
 
-<<<<<<< HEAD
-# Deine bestehenden Funktionen (apiCall, db_empfehlung_items) bleiben gleich...
-
-@app.route("/", methods=["GET","POST"])
-def home():
-    datum_aktuell = datetime.now().strftime("%Y-%m-%d")
-    uhrzeit_aktuell = datetime.now().strftime("%H:%M")
-    
-    stadtname = ""
-    api_response = []
-    result = []
-
-    if request.method == "POST":
-        # Wir holen den Text aus dem neuen Eingabefeld
-        stadt_eingabe = request.form.get("stadt_eingabe")
-        datum = request.form.get("datum")
-        zeit = request.form.get("uhrzeit")
-        stunde = int(zeit[:2]) if zeit else 12
-
-        try:
-            # Dynamische Ortssuche mit geopy 
-            location = geolocator.geocode(stadt_eingabe)
-            
-            if location:
-                # Koordinaten extrahieren 
-                lat = str(location.latitude)
-                lon = str(location.longitude)
-                stadtname = location.address # Zeigt den vollen Namen an
-                
-                # API mit den gefundenen Koordinaten aufrufen
-                api_response = apiCall(lat, lon, datum, stunde)
-                
-                if api_response and api_response[0]["Temperatur"] is not None:
-                    result = db_empfehlung_items(api_response[0]["Temperatur"])
-            else:
-                flash(f"Ort '{stadt_eingabe}' wurde nicht gefunden.", "error")
-                
-        except Exception as e:
-            flash("Fehler bei der Ortssuche oder API.", "error")
-=======
 
 def apiCall(latitude, longitude, date, time):
 	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
@@ -203,14 +165,3 @@ def home():
 	)
 if __name__ == "__main__":
 	app.run(debug=True)
->>>>>>> 54feb026f993f6deb96d1e3ad631a09d5cbbe6d5
-
-    return render_template(
-        "index-test.html",
-        datum_aktuell=datum_aktuell,
-        uhrzeit_aktuell=uhrzeit_aktuell,
-        stadtname=stadtname,
-        api_response=api_response,
-        result=result
-        # 'staedte=staedte' wird nicht mehr benötigt!
-    )
