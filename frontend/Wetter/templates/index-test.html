@@ -65,23 +65,22 @@
 	<div id="empfehlung_display" class="empfehlung">
 		<div class="container-left">
 			<div class="wetter-daten" style="text-align:start">
-				{% if api_response %}
+				{% if api_response and api_response|length > 0 %}
 				<script>
-					var empfehlung = document.getElementById('empfehlung_display');
-					empfehlung.style.display = 'flex';
+					document.getElementById('empfehlung_display').style.display = 'flex';
 				</script>
 					
 				<h2 style="margin:auto">{{ stadtname }}</h2>
-				<p>Datum: {{ api_response[0].Datum | date_de}}</p>
-				<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
+				<p>Datum: {{ api_response[0].Datum | date_de }} · Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
+                <br>
 				<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
-				<p>Regen: {{ api_response[0].Regen }} mm</p>
-				<p>Schnee: {{ api_response[0].Schnee }} cm</p>
-				<p>Wind: {{ api_response[0].Wind }} km/h</p>
-				<p>UV-Index: {{ api_response[0].UV }} (maximaler Wert am gesamten Tag)</p>
+                <br>
+				<p>🌧️Regen: {{ api_response[0].Regen }} · ️❄️Schnee: {{ api_response[0].Schnee }} cm</p>
+				<p>🌬️Wind: {{ api_response[0].Wind }} km/h · ☀️UV-Index: {{ api_response[0].UV }} </p>
 				{% endif %}
 			</div>
 			<div class="kleider-empfehlung left">
+                {% if api_response and api_response|length > 0 %}
 				<h2 style="margin:auto">Kleidungsempfehlung:</h2>
 				{% for item in result %}
 				<p>{{ item.kategorie }}: {{ item.name }}</p>
@@ -95,18 +94,16 @@
 				{% if api_response[0].Schnee > 0.0 %}
 				<p>Ski Wetter ⛷️</p>
 				{% endif %}
+                {% endif %}
 			</div>
 		</div>
 		<div class="container-right">
 			<div class="wetter-bild">
-				<!--
-				{% if api_response[0].UV > 0 and api_response[0].Regen == 0.0 %}
-				<p>🌞</p>
-				{% endif %}
-				-->
+
 			</div>
 			<div class="kleider-bilder">
-				{% set temp = api_response[0].Temperatur %}
+                {% if api_response and api_response|length > 0 %}
+                {% set temp = api_response[0].Temperatur %}
 				{% if -20 <= temp < -15 %}
 					<img src="{{ url_for('static', filename='outfit1.png') }}" alt="">
 				{% elif -15 <= temp < -10 %}
@@ -140,7 +137,9 @@
 				{% elif 55 <= temp <= 60 %}
 					<img src="{{ url_for('static', filename='outfit16.png') }}" alt="">
 				{% endif %}
-			</div>
+            {% endif %}
+
+            </div>
 		</div>
 			
 	</div>
