@@ -3,13 +3,12 @@ body {
     align-items: center;
     background-color: aliceblue;
     background-image: url('frog.jpg');
-    background-size:cover;
+    background-size: cover;
     font-family: Arial, sans-serif;
-	color: #2b6cb0;
-	text-align: center;
-	margin-bottom: 20px;
+    color: #2b6cb0;
+    text-align: center;
+    margin-bottom: 20px;
 }
-
 
 /* Bewegung */
 @keyframes float {
@@ -26,16 +25,16 @@ body {
 
 .input-form {
     display: flex;
-	flex-direction: column;
+    flex-direction: column;
     justify-content: center;
 }
 
 h1 {
-	margin: auto;
+    margin: auto;
     font-family: 'Fredoka', Arial, sans-serif;
     font-size: 40px;
 
-      text-shadow:
+    text-shadow:
     -1px -1px 0 #2b6cb0,
      1px -1px 0 #2b6cb0,
     -1px  1px 0 #2b6cb0,
@@ -54,8 +53,6 @@ h2 {
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    
-
 
     width: 170px;
     height: 110px;
@@ -77,64 +74,132 @@ h2 {
     backdrop-filter: blur(10px);
 
     border-radius: 15px;
-    
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
+
 .input-group {
     margin: auto;
     font-family: 'Fredoka', Arial, sans-serif;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  overflow: hidden;
-  width: fit-content;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    width: fit-content;
 }
 
 .input-group select,
 .input-group input {
-  border: none;
-  padding: 8px 12px;
-  outline: none;
-  font-size: 14px;
+    border: none;
+    padding: 8px 12px;
+    outline: none;
+    font-size: 14px;
 }
 
 .input-group select:not(:last-child),
 .input-group input:not(:last-child) {
-  border-right: 1px solid #ccc;
+    border-right: 1px solid #ccc;
 }
 
 .description {
-
     border: 2px solid #ccc;
-	text-align: start;
+    text-align: start;
     line-height: 20px;
     border-radius: 15px;
     margin-top: 30px;
     margin: 15px;
-	background-color: white;
-	padding: 15px;
+    background-color: white;
+    padding: 15px;
 }
 
 .empfehlung {
-  display: none;
-  grid-template-columns: 1fr 1fr;   /* links = rechts gleich breit */
-  grid-template-rows: 1fr 1fr; 
-	background-color: white; 
-	border: 2px dashed #2b6cb0;
+    display: none;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto;
+    grid-template-areas:
+        "thermo thermo"
+        "text bild";
+
+    background-color: white;
+    border: 2px dashed #2b6cb0;
     border-radius: 15px;
     margin: 15px;
-	padding: 15px;
+    padding: 15px;
+    gap: 20px;
 }
 
 .kleider-empfehlung {
-  text-align: start;
+    grid-area: text;
+    text-align: start;
+}
+
+.kleider-bilder {
+    grid-area: bild;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.kleider-bilder img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
 }
 
 .container-left {
-  flex: 1;
+    flex: 1;
 }
 
 .container-right {
-  flex: 1;
-  margin-top: auto;
-  top: 20px;
+    flex: 1;
+    margin-top: auto;
+    top: 20px;
+}
+
+/* ----------------------------- */
+/* THERMO-DISPLAY (digitale Anzeige) */
+/* ----------------------------- */
+
+.thermo-display {
+    grid-area: thermo;
+    width: 100%;
+    max-width: 100%;
+    background: #e8f6ff;
+    padding: 10px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.thermo-display .city {
+    font-size: 2rem;
+    margin: 0;
+    font-weight: bold;
+}
+
+.thermo-display .datetime {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.temp-big {
+    font-size: 4rem;
+    font-weight: bold;
+    color: #0077cc;
+    margin: 15px 0;
+}
+
+.weather-mini {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+    font-size: 1.1rem;
+}
+
+.weather-mini .left-mini,
+.weather-mini .right-mini {
+    width: 45%;
+    text-align: left;
 }
