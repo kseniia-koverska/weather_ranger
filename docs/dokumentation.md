@@ -131,6 +131,49 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
     kleidung_id INTEGER,
     FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
    );
+   ### Entity-Relationship-Diagramm (ERD)
+
+  ![Entity-Relation-Diagramm](entity_relation_diagram_db.png)
+
+Zur Visualisierung der Datenbankstruktur wurde ein **Entity-Relationship-Diagramm (ERD)** erstellt.
+Für die Erstellung des Diagramms wurde das Tool [**dbdiagram.io**] (https://dbdiagram.io/home) verwendet, welches eine einfache und übersichtliche Darstellung relationaler Datenbanken ermöglicht.
+
+Das ERD zeigt die beiden zentralen Tabellen kleidung und wetter_regeln sowie deren Beziehung zueinander.
+
+### Beschreibung der Tabellenbeziehung
+
+Zwischen den Tabellen kleidung und wetter_regeln besteht eine 1:n-Beziehung (One-to-Many).
+
+Das bedeutet:
+
+Ein Kleidungsstück kann mehreren Wetterregeln zugeordnet sein
+
+Jede Wetterregel gehört jedoch genau zu einem Kleidungsstück
+
+Die Verbindung wird über den Fremdschlüssel kleidung_id in der Tabelle wetter_regeln realisiert. Dieser verweist auf den Primärschlüssel id der Tabelle kleidung.
+
+Dadurch ist sichergestellt, dass jede Wetterregel eindeutig einem existierenden Kleidungsstück zugeordnet ist.
+
+### Zusammenhang mit dem Programmcode
+
+Die definierte Beziehung wird direkt im Programmcode genutzt, um passende Kleidungsempfehlungen zu ermitteln.
+
+In der Funktion db_empfehlung_items wird eine SQL-Abfrage ausgeführt, die beide Tabellen miteinander verknüpft:
+
+```
+JOIN wetter_regeln w ON k.id = w.kleidung_id
+```
+
+Anschließend werden alle Wetterregeln gefiltert, deren Temperaturbereich zur aktuellen Temperatur passt:
+
+```
+w.min_temp <= temperatur AND w.max_temp >= temperatur
+```
+
+### Zusammenfassung
+
+Die Datenbank basiert auf einer klaren und einfachen Struktur mit zwei Tabellen, die über eine 1:n-Beziehung verbunden sind. Durch diese Verknüpfung können Wetterbedingungen effizient mit passenden Kleidungsstücken kombiniert werden. Die Logik der Empfehlung wird dabei dynamisch über die Datenbank gesteuert, was eine flexible Anpassung der Regeln ermöglicht.
+
 
 ## 7. Backend und API
 
@@ -315,31 +358,7 @@ Um die Stabilität der Anwendung zu gewährleisten, wurde eine Fehlerbehandlung 
 Dabei werden sowohl Benutzereingaben als auch mögliche Fehler bei der Kommunikation mit externen Diensten berücksichtigt.
 Das Ziel ist, Systemabstürze zu vermeiden und dem Benutzer verständliche Rückmeldungen zu geben.
 
-### 11.1 Fehlende oder ungültige Benutzereingaben
-
-Die Anwendung überprüft alle Eingaben des Benutzers, bevor sie verarbeitet werden. Dies betrifft insbesondere die Pflichtfelder im HTML-Formular:
-
-Beispiel HTML-Formular:
-```html
-<input type="text" name="standort">
-<input type="datetime-local" name="datum">
-```
-
-Im Backend werden die Daten über Flask aus dem Formular ausgelesen:
-```Python
-standort = request.form["standort"]
-datum = request.form["datum"]
-```
-
-Verhalten bei fehlenden Eingaben:
-Wenn ein Pflichtfeld leer ist oder ungültige Daten enthält, wird die Verarbeitung abgebrochen und eine Fehlermeldung angezeigt.
-
-**Beispielhafte Fehlermeldung:
-Bitte alle Felder ausfüllen.**
-
-*(Hinweis: Die Überprüfung kann z.B. über request.form.get() im Backend oder ein Dropdown-Menü für Städte erfolgen, um ungültige Eingaben zu vermeiden.)*
-
-### 11.2 Fehler beim Abrufen der Wetterdaten
+### 11.1 Fehler beim Abrufen der Wetterdaten
 
 Beim Abrufen der Wetterdaten über die externe API kann es zu Problemen kommen, z.B.:
 
@@ -349,12 +368,28 @@ Beim Abrufen der Wetterdaten über die externe API kann es zu Problemen kommen, 
 
 - ungültige Antwort von der API
 
-**Beispielhafte Fehlermeldung:
-Wetterdaten konnten nicht geladen werden.**
+Zur Absicherung wurde im Backend eine Fehlerbehandlung mit try-except implementiert:
 
-*(Hinweis: Im Backend kann dies z.B. durch ein try-except beim API-Request abgefangen werden.)*
+```
+def apiCall(latitude, longitude, date, time):
+    try:
+        response = requests.get(url)
+        data = response.json()
 
-### 11.3 Fehler bei der Datenbankverbindung
+        hourly_data = data['hourly']
+
+        api_reply.append({
+            "Temperatur": hourly_data['temperature_2m'][hour_index]
+        })
+
+    except:
+        flash("Wetterdaten konnten nicht geladen werden", "error")
+        api_reply.append({"Temperatur": None})
+```
+Der API-Aufruf wird innerhalb eines try-Blocks ausgeführt. Sollte dabei ein Fehler auftreten, wird dieser im except-Block abgefangen.
+Anstatt dass das Programm abstürzt, wird eine Fehlermeldung ausgegeben und ein Standardwert (None) zurückgegeben. Dadurch bleibt die Anwendung stabil und kann weiterhin ausgeführt werden.
+
+### 11.2 Fehler bei der Datenbankverbindung
 
 Die Anwendung stellt eine Verbindung zur SQLite-Datenbank her, um Wetterregeln und Kleidungsempfehlungen abzurufen. Dabei können folgende Probleme auftreten:
 
@@ -362,11 +397,27 @@ Die Anwendung stellt eine Verbindung zur SQLite-Datenbank her, um Wetterregeln u
 
 - Fehler beim Öffnen der Verbindung oder Ausführen von SQL-Abfragen
 
-**Beispielhafte Fehlermeldung: Datenbankverbindung fehlgeschlagen.**
+Zur Behandlung dieser Fehler wird ebenfalls ein try-except-Block verwendet:
+```
+def db_empfehlung_items(temperature):
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        cursor = conn.cursor()
 
-*(Hinweis: Im Backend kann dies z.B. durch ein try-except beim sqlite3.connect("wetter.db") abgefangen werden.)*
+        cursor.execute(sql_stmt, (temperature, temperature))
+        kleidungsteile = cursor.fetchall()
 
-### 11.4 Keine passende Kleidungsempfehlung gefunden
+        conn.close()
+
+    except:
+        flash("Datenbankverbindung fehlgeschlagen", "error")
+```
+Die Verbindung zur Datenbank sowie die Ausführung der SQL-Abfrage erfolgen innerhalb eines try-Blocks.
+Falls ein Fehler auftritt, wird dieser im except-Block abgefangen und eine Fehlermeldung angezeigt.
+Dadurch wird verhindert, dass die Anwendung bei Datenbankproblemen abstürzt.
+
+
+### 11.3 Keine passende Kleidungsempfehlung gefunden
 
 Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der Datenbank existiert. In diesem Fall sollte der Benutzer informiert werden, damit die Anwendung nicht abstürzt.
 

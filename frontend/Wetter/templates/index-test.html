@@ -36,7 +36,7 @@
 						<option value='{{ stadt | tojson }}'>{{ stadt.name }}</option>
 					{% endfor %}
 				</select>
-				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}">
+				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}" min="{{ min_date }}" max="{{ max_date }}">
 				<input type="time" class="time-input" name="uhrzeit" value="{{ uhrzeit_aktuell }}">
 			</div>
 			<button id="api-btn" class="cloud-btn" type="submit"><strong>Was zieh ich an?</strong></button>
@@ -63,32 +63,88 @@
 	-->
 
 	<div id="empfehlung_display" class="empfehlung">
-		<div class="wetter-daten">
-			{% if api_response %}
-			<script>
-				var empfehlung = document.getElementById('empfehlung_display');
-				empfehlung.style.display = 'block';
-			</script>
-				
-				<div class="wetter-daten" style="text-align:start">
-					<h2 style="margin:auto">{{ stadtname }}</h2>
-					<p>Datum: {{ api_response[0].Datum | date_de}}</p>
-					<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
-					<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
-					<p>Regen: {{ api_response[0].Regen }} mm</p>
-					<p>Schnee: {{ api_response[0].Schnee }} cm</p>
-					<p>Wind: {{ api_response[0].Wind }} km/h</p>
-				<h3 style="margin:auto">Kleidungsempfehlung:</h2>
-					<div class="kleider-empfehlung">
-						{% for item in result %}
-						<p>{{ item.kategorie }}: {{ item.name }}</p>
-						{% endfor %}
-					</div>
-				</div>
-			{% endif %}
+		<div class="container-left">
+			<div class="wetter-daten" style="text-align:start">
+				{% if api_response and api_response|length > 0 %}
+				<script>
+					document.getElementById('empfehlung_display').style.display = 'flex';
+				</script>
+					
+				<h2 style="margin:auto">{{ stadtname }}</h2>
+				<p>Datum: {{ api_response[0].Datum | date_de }} · Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
+                <br>
+				<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
+                <br>
+				<p>🌧️Regen: {{ api_response[0].Regen }} · ️❄️Schnee: {{ api_response[0].Schnee }} cm</p>
+				<p>🌬️Wind: {{ api_response[0].Wind }} km/h · ☀️UV-Index: {{ api_response[0].UV }} </p>
+				{% endif %}
+			</div>
+			<div class="kleider-empfehlung left">
+                {% if api_response and api_response|length > 0 %}
+				<h2 style="margin:auto">Kleidungsempfehlung:</h2>
+				{% for item in result %}
+				<p>{{ item.kategorie }}: {{ item.name }}</p>
+				{% endfor %}
+				{% if api_response[0].UV > 0 %}
+				<p>Sonnenbrille mitnehmen 😎</p>
+				{% endif %}
+				{% if api_response[0].Regen > 0.0 %}
+				<p>Regenschirm mitnehmen ☂️</p>
+				{% endif %}
+				{% if api_response[0].Schnee > 0.0 %}
+				<p>Ski Wetter ⛷️</p>
+				{% endif %}
+                {% endif %}
+			</div>
 		</div>
+		<div class="container-right">
+			<div class="wetter-bild">
 
+			</div>
+			<div class="kleider-bilder">
+                {% if api_response and api_response|length > 0 %}
+                {% set temp = api_response[0].Temperatur %}
+				{% if -20 <= temp < -15 %}
+					<img src="{{ url_for('static', filename='outfit1.png') }}" alt="">
+				{% elif -15 <= temp < -10 %}
+					<img src="{{ url_for('static', filename='outfit2.png') }}" alt="">
+				{% elif -10 <= temp < -5 %}
+					<img src="{{ url_for('static', filename='outfit3.png') }}" alt="">
+				{% elif -5 <= temp < 0 %}
+					<img src="{{ url_for('static', filename='outfit4.png') }}" alt="">
+				{% elif 0 <= temp < 5 %}
+					<img src="{{ url_for('static', filename='outfit5.png') }}" alt="">
+				{% elif 5 <= temp < 10 %}
+					<img src="{{ url_for('static', filename='outfit6.png') }}" alt="">
+				{% elif 10 <= temp < 15 %}
+					<img src="{{ url_for('static', filename='outfit7.png') }}" alt="">
+				{% elif 15 <= temp < 20 %}
+					<img src="{{ url_for('static', filename='outfit8.png') }}" alt="">
+				{% elif 20 <= temp < 25 %}
+					<img src="{{ url_for('static', filename='outfit9.png') }}" alt="">
+				{% elif 25 <= temp < 30 %}
+					<img src="{{ url_for('static', filename='outfit10.png') }}" alt="">
+				{% elif 30 <= temp < 35 %}
+					<img src="{{ url_for('static', filename='outfit11.png') }}" alt="">
+				{% elif 35 <= temp < 40 %}
+					<img src="{{ url_for('static', filename='outfit12.png') }}" alt="">
+				{% elif 40 <= temp < 45 %}
+					<img src="{{ url_for('static', filename='outfit13.png') }}" alt="">
+				{% elif 45 <= temp < 50 %}
+					<img src="{{ url_for('static', filename='outfit14.png') }}" alt="">
+				{% elif 50 <= temp < 55 %}
+					<img src="{{ url_for('static', filename='outfit15.png') }}" alt="">
+				{% elif 55 <= temp <= 60 %}
+					<img src="{{ url_for('static', filename='outfit16.png') }}" alt="">
+				{% endif %}
+            {% endif %}
+
+            </div>
+		</div>
+			
 	</div>
+
+</div>
 
 
 	<!-- TESTING
