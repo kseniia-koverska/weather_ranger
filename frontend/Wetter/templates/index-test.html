@@ -65,6 +65,7 @@
 	<div id="empfehlung_display" class="empfehlung"
     {% if api_response and api_response|length > 0 %} style="display:grid;" {% endif %}>
 
+
             <div class="thermo-display">
                 {% if api_response and api_response|length > 0 %}
 
@@ -111,6 +112,7 @@
                 {% endif %}
             </div>
             <div class="kleider-bilder">
+
                 {% if api_response and api_response|length > 0 %}
                 {% set temp = api_response[0].Temperatur %}
                 {% if -20 <= temp < -15 %}
