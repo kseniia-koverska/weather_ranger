@@ -69,7 +69,7 @@
             <div class="thermo-display">
                 {% if api_response and api_response|length > 0 %}
 
-                <h2 class="city">{{ stadtname }}</h2>
+                <h2 class="city">&#128205;{{ stadtname }}</h2>
 
                 <p class="datetime">
                     {{ api_response[0].Datum | date_de }} · {{ api_response[0].Uhrzeit }} Uhr
@@ -87,7 +87,7 @@
 
                     <div class="right-mini">
                         ❄️ Schnee: {{ api_response[0].Schnee }} cm<br>
-                        ☀️ UV: {{ api_response[0].UV }}
+                        ☀️ UV-Index: {{ api_response[0].UV }}
                     </div>
                 </div>
 
