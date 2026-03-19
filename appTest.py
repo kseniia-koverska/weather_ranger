@@ -148,8 +148,14 @@ def home():
 		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
 
 		result = db_empfehlung_items(api_response[0]["Temperatur"])
-		#Für den Temperaturstest
-		#result = db_empfehlung_items(-12)
+		
+		#Zum Testen, künstliche Werte erstellen:
+		#Temperatur: -20 (veränderbar)
+		#result = db_empfehlung_items(-20)
+		#Testwert für Schnee
+		api_response[0]["Schnee"] = 3.00
+		#Testwert für Regen
+		api_response[0]["Regen"] = 3.00
 
 	return render_template(
 		"index-test.html",

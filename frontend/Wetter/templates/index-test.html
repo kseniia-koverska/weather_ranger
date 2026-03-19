@@ -100,7 +100,7 @@
                 {% for item in result %}
                 <p>{{ item.kategorie }}: {{ item.name }}</p>
                 {% endfor %}
-                {% if api_response[0].UV > 0 %}
+                {% if api_response[0].UV > 3 %}
                 <p>Sonnenbrille mitnehmen 😎</p>
                 {% endif %}
                 {% if api_response[0].Regen > 0.0 %}
