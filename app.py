@@ -7,7 +7,7 @@ import secrets
 import json
 
 
-from app import form_submits
+#from app import form_submits
 
 
 
@@ -151,11 +151,11 @@ def home():
 
 		#Zum Testen, künstliche Werte erstellen:
 		#Temperatur: -20 (veränderbar)
-		result = db_empfehlung_items(-6)
+		#result = db_empfehlung_items(-6)
 		#Testwert für Schnee
-		api_response[0]["Schnee"] = 3.00
+		#api_response[0]["Schnee"] = 3.00
 		#Testwert für Regen
-		api_response[0]["Regen"] = 3.00
+		#api_response[0]["Regen"] = 3.00
 
 	return render_template(
 		"index.html",
