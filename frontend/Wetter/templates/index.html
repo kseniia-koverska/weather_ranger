@@ -4,137 +4,168 @@
 
 	<title>🌞 WEATHER RANGERS 🌞</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+	<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600&display=swap" rel="stylesheet">   
 </head>
-
 <body>
-
-
-<br>
-
-<div class="box1">
-	<h1>deine wetter-helfer</h1>
-
-	<div class="description">
-	Mithilfe der Wetter-Helfer kannst du 
-	anhand deines Standorts entsprechende kleidungsempfehlungen 
-	ausgeben lassen.
-
-	Du kannst zwischen Standorten wählen (Wetterdaten sind 5 Tage (?) voraus/nachhinein möglich):
-	</div>
-
-</div>
-
-<div class="box2">
-
-<form method="POST">
-
-<p>
-
-
-<input type="text" name="standort" required placeholder="Berlin"
-oninvalid="this.setCustomValidity('Bitte gib einen Standort ein!')"
-oninput="this.setCustomValidity('')">
-</p>
-
-<p>
-
-gib hier ein beliebiges datum/uhrzeit an und erhalte deine vorhersage:<br><br>
-<input type="date" name="datum" required
-oninvalid="this.setCustomValidity('Bitte gib ein Datum ein!')"
-oninput="this.setCustomValidity('')">
-
-<input type="time" id="uhrzeit" name="uhrzeit" required
-oninvalid="this.setCustomValidity('Bitte gib eine Uhrzeit ein!')"
-oninput="this.setCustomValidity('')">
-</p>
-
-<button type="submit" class="cloud-btn">empfehlung abrufen</button>
-
-</form>
-
-</div>
-
-<!-- TESTING -->
 
 <div class="box3">
 
 
 
-<h1>deine wetter-helfer</h1>
-
-<div class="input_form">
-	<form method="POST">
-		<p>
-		mithilfe der WEATHER-RANGERS-APP kannst du dir <br>
-		anhand deines standorts entsprechende kleidungsempfehlungen <br>
-		ausgeben lassen. <br><br>
-
-		gib hier deinen standort an und es kann losgehen:
-		<select id="stadt" name="standort">
-		<option value="berlin">Berlin</option>
-		</select>
-		</p>
+	<h1>  Weather Ranger </h1>
 
 
-		<p>du brauchst eine empfehlung für die nächsten tage?<br>
-		gib hier ein beliebiges datum/uhrzeit an und erhalte eine vorhersage:
-		<input type="date" name="datum" required>
-		<input type="time" id="uhrzeit" name="uhrzeit" required>
-		</p>
-		<button id="api-btn" class="cloud-btn" type="submit">empfehlung abrufen</button>
-	</form>
-</div>
-<!-- TESTING 
-
-<h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
-
-{% if submits %}
-<p>Datum: {{ submits[0][0] }}</p>
-<p>Uhrzeit: {{ submits[0][1] }}</p>
-<p>Stunde: {{ submits[0][1][:2] }}</p>
-{% else %}
-<p>Noch keine Einträge vorhanden.</p>
-{% endif %}
--->
-
-<div id="empfehlung_display" class="empfehlung">
-	<div class="wetter-daten">
-		{% if api_response %}
-		<script>
-			var empfehlung = document.getElementById('empfehlung_display');
-			empfehlung.style.display = 'block';
-			console.log('test')
-		</script>
-			<p>Datum: {{ api_response[0].Datum }}</p>
-			<p>Uhrzeit: {{ api_response[0].Uhrzeit }} Uhr</p>
-			<p>Temperatur: {{ api_response[0].Temperatur }} °C</p>
-			<p>Regen: {{ api_response[0].Regen }} mm</p>
-			<p>Schnee: {{ api_response[0].Schnee }} cm</p>
-			<p>Wind: {{ api_response[0].Wind }} km/h</p>
-		{% endif %}
+	<div class="description">
+		Mithilfe von <strong>Weather Ranger</strong> kannst du 
+		anhand deines Standorts entsprechende Kleidungsempfehlungen 
+		ausgeben lassen.
+		<br><br>
+		Du kannst zwischen folgenden Standorten wählen: <br><br>
+		{% for stadt in staedte %}
+			{{ stadt.name }}{% if not loop.last %},{% endif %}
+		{% endfor %}
+		<br><br>
+		<i>(Wetter-Vorhersage/Rückschau: max. 7 Tage)</i>
 	</div>
-	<div class="kleider-empfehlung">
-		<p>Oberteil: {{ empfehlung_oberteil | join(', ') }}</p>
-		<p>Hose: {{ empfehlung_hose | join(', ') }}</p>
-		<p>Schuhe: {{ empfehlung_schuhe | join(', ') }}</p>
-		<p>Accessoires: {{ empfehlung_accessoire | join(', ') }}</p>
+
+	<div class="input_form">
+		<form method="POST">
+			<div class="input-group">
+				<select id="stadt" name="standort">
+					{% for stadt in staedte %}
+						<option value='{{ stadt | tojson }}'>{{ stadt.name }}</option>
+					{% endfor %}
+				</select>
+				<input type="date" class="date-input" name="datum" value="{{ datum_aktuell }}" min="{{ min_date }}" max="{{ max_date }}">
+				<input type="time" class="time-input" name="uhrzeit" value="{{ uhrzeit_aktuell }}">
+			</div>
+			<button id="api-btn" class="cloud-btn" type="submit"><strong>Was zieh ich an?</strong></button>
+		</form>
 	</div>
-</div>
+		{% with messages = get_flashed_messages() %}
+	{% if messages %}
+		{% for message in messages %}
+		<div class="flash">{{ message }}</div>
+		{% endfor %}
+	{% endif %}
+	{% endwith %}
+	<!-- TESTING 
+
+	<h2>Hier kommt was zurück aus dem Backend (wenn abgeschickt)</h2>
+
+	{% if submits %}
+	<p>Datum: {{ submits[0][0] }}</p>
+	<p>Uhrzeit: {{ submits[0][1] }}</p>
+	<p>Stunde: {{ submits[0][1][:2] }}</p>
+	{% else %}
+	<p>Noch keine Einträge vorhanden.</p>
+	{% endif %}
+	-->
+
+	<div id="empfehlung_display" class="empfehlung"
+    {% if api_response and api_response|length > 0 %} style="display:grid;" {% endif %}>
+
+
+            <div class="thermo-display">
+                {% if api_response and api_response|length > 0 %}
+
+                <h2 class="city">&#128205;{{ stadtname }}</h2>
+
+                <p class="datetime">
+                    {{ api_response[0].Datum | date_de }} · {{ api_response[0].Uhrzeit }} Uhr
+                </p>
+
+                <div class="temp-big">
+                    {{ api_response[0].Temperatur }}°C
+                </div>
+
+                <div class="weather-mini">
+                    <div class="left-mini">
+                        🌧️ Regen: {{ api_response[0].Regen }} mm<br>
+                        🌬️ Wind: {{ api_response[0].Wind }} km/h
+                    </div>
+
+                    <div class="right-mini">
+                        ❄️ Schnee: {{ api_response[0].Schnee }} cm<br>
+                        ☀️ UV-Index: {{ api_response[0].UV }}
+                    </div>
+                </div>
+
+                {% endif %}
+            </div>
+
+            <div class="kleider-empfehlung left">
+                {% if api_response and api_response|length > 0 %}
+                <h2 style="margin:auto">Kleidungsempfehlung:</h2>
+                {% for item in result %}
+                <p>{{ item.kategorie }}: {{ item.name }}</p>
+                {% endfor %}
+                {% if api_response[0].UV > 3 %}
+                <p>Sonnenbrille mitnehmen 😎</p>
+                {% endif %}
+                {% if api_response[0].Regen > 0.0 %}
+                <p>Regenschirm mitnehmen ☂️</p>
+                {% endif %}
+                {% if api_response[0].Schnee > 0.0 %}
+                <p>Ski Wetter ⛷️</p>
+                {% endif %}
+                {% endif %}
+            </div>
+            <div class="kleider-bilder">
+
+                {% if api_response and api_response|length > 0 %}
+                {% set temp = api_response[0].Temperatur %}
+                {% if -20 <= temp < -15 %}
+                <img src="{{ url_for('static', filename='outfit1.png') }}" alt="">
+                {% elif -15 <= temp < -10 %}
+                <img src="{{ url_for('static', filename='outfit2.png') }}" alt="">
+                {% elif -10 <= temp < -5 %}
+                <img src="{{ url_for('static', filename='outfit3.png') }}" alt="">
+                {% elif -5 <= temp < 0 %}
+                <img src="{{ url_for('static', filename='outfit4.png') }}" alt="">
+                {% elif 0 <= temp < 5 %}
+                <img src="{{ url_for('static', filename='outfit5.png') }}" alt="">
+                {% elif 5 <= temp < 10 %}
+                <img src="{{ url_for('static', filename='outfit6.png') }}" alt="">
+                {% elif 10 <= temp < 15 %}
+                <img src="{{ url_for('static', filename='outfit7.png') }}" alt="">
+                {% elif 15 <= temp < 20 %}
+                <img src="{{ url_for('static', filename='outfit8.png') }}" alt="">
+                {% elif 20 <= temp < 25 %}
+                <img src="{{ url_for('static', filename='outfit9.png') }}" alt="">
+                {% elif 25 <= temp < 30 %}
+                <img src="{{ url_for('static', filename='outfit10.png') }}" alt="">
+                {% elif 30 <= temp < 35 %}
+                <img src="{{ url_for('static', filename='outfit11.png') }}" alt="">
+                {% elif 35 <= temp < 40 %}
+                <img src="{{ url_for('static', filename='outfit12.png') }}" alt="">
+                {% elif 40 <= temp < 45 %}
+                <img src="{{ url_for('static', filename='outfit13.png') }}" alt="">
+                {% elif 45 <= temp < 50 %}
+                <img src="{{ url_for('static', filename='outfit14.png') }}" alt="">
+                {% elif 50 <= temp < 55 %}
+                <img src="{{ url_for('static', filename='outfit15.png') }}" alt="">
+                {% elif 55 <= temp <= 60 %}
+                <img src="{{ url_for('static', filename='outfit16.png') }}" alt="">
+                {% endif %}
+                {% endif %}
+            </div>
+
+	</div>
 
 
 
-<h2>API-CALL Response:</h2>
+	<!-- TESTING
+	<h2>API-CALL Response:</h2>
 
-{% if api_response %}
-<p> {{ api_response }} </p>
-{% endif %}
+	{% if api_response %}
+	<p> {{ api_response }} </p>
+	{% endif %}
 
-<p>Empfehlung Oberteil: {{ empfehlung_oberteil }}</p>
-<p>Empfehlung Kopfbedeckung: {{ empfehlung_kopf }}</p>
-<!-- TESTING -->
+	<p>Empfehlung Oberteil: {{ empfehlung_oberteil }}</p>
+	<p>Empfehlung Kopfbedeckung: {{ empfehlung_kopf }}</p>
+	 -->
 
-
-</div>
 
 </body>
 </html>
