@@ -299,7 +299,7 @@ Die Datei index.html beinhaltet die Struktur der Startseite der WEATHER-RANGERS-
 
 ### 9 Backend Funktionalität (Kleiderempfehlung-Logik)
 
-Über das Webformular im Frontend wählt der User den gewünschten Standort sowie Zeitraum und Uhrzeit für eine Kleidungsempfehlung.
+Über das Webformular im Frontend wählt der User den gewünschten Standort sowie Datum und Uhrzeit für eine Kleidungsempfehlung.
 
 Die Daten werden ans Backend gesendet und werden dort dafür verwendet um:
 
@@ -324,9 +324,9 @@ return render_template(
 		staedte=staedte
 	)
 ```
-Der erste Parameter bezieht sich auf die Datei bzw. den Pfad sprich den Endpunkt zum Empfangen der Variablen. Anschließend folgen die Variabelnamen und die entsprechenden Werte der Variablen aus dem Backend (app.py).
+Der erste Parameter bezieht sich auf die Datei bzw. den Endpunkt zum Empfangen der Variablen (hier: index.html). Anschließend folgen die Variabelnamen und die entsprechenden Werte der Variablen aus dem Backend (app.py).
 
-Um zum Beispiel die ausgewählte Stadt im Resultat wieder im Frontend auszugeben:
+Um zum Beispiel die ausgewählte Stadt im Resultat wieder im Frontend auszugeben (Jinja-Syntax):
 
 ```
 <h1> {{ stadtname }}</h1>
@@ -357,7 +357,7 @@ Ablauf:
 	daily_data = data['daily']
 ```
 
-5. Daten aus daten werden als Dictionary in `api_reply` angehangen.
+5. Daten aus `data` werden als Dictionary in `api_reply` angehangen.
 
 ```
   api_reply.append({
@@ -385,6 +385,8 @@ Aufrufen der Funktion (mit Formulardaten):
 
 		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
 ```
+
+*Hinweis:* Da wir ausgehend von der open-meteo API Daten nur stündlich abfragen können, übernehmen wir nur den Stunden Wert, der Zeit aus dem Webformular. Da dieses in `zeit` im Format HH:MM ankommt, entnehmen wir über `zeit[:2]` nur die Stunden Anzahl und übergeben diesen umgewandelt als Integer in den API-Call.
 
 Die Städte können über ein Select-Input im Frontend ausgewählt werden und kommen im Backend als JSON-Objekt an, weil wir zum einen den Stadtnamen brauchen (für User im Frontend), aber auch Längen-/Breitengrad für die API-Anfrage. Deswegen müssen wir über json.loads den entsprechenden Wert auslesen.
 
