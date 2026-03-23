@@ -294,8 +294,102 @@ http://127.0.0.1:5000
 Der Flask-Server lädt nun die Datei index.html aus dem Ordner templates und zeigt sie im Browser an.
 
 ### 8.9. HTML-Struktur der Startseite
-
 Die Datei index.html beinhaltet die Struktur der Startseite der WEATHER-RANGERS-App.
+
+### 8.10 Aufbau der HTML-Datei (index.html)
+In der Datei index.html wird die Benutzeroberfläche der Anwendung "Weather Ranger" dargestellt. Mithilfe des Flask-Server wird sie dynamisch mit Daten befüllt und im Browser angezeigt.
+
+Die Seite besteht aus mehreren Bereichen:
+
+Grundstruktur und Einbindung von Ressourcen
+
+Im <head>-Bereich werden Seitentitel und externe Ressourcen eingebunden:
+
+-Der Seitentitel wird festgelegt
+-Eine CSS-Datei (style.css) zur Gestaltung der Seite
+-Eine Google-Schriftart zur optischen Aufwertung
+
+Die CSS-Datei wird via Flask mit folgender Funktion eingebunden:
+
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+Beschreibung der Anwendung
+
+Im oberen Bereich der Seite wird eine kurze Erklärung der Anwendung angezeigt. Zusätzlich wird eine Liste der verfügbaren Städte dynamisch aus dem Backend geladen:
+
+{% for Stadt in staedte %}
+	{{ Stadt.name }}
+{% endfor %}
+
+Diese Schleife wird von der Template-Engine Jinja2 verarbeitet.
+
+Eingabeformular
+
+Das Formular bietet dem User die Auswahl von:
+
+Standort(Dropdown-Menü)
+Datum(Kalenderauswahl)
+Uhrzeit
+
+Die Eingaben werden per POST-Anfrage an den Flask-Server gesendet:
+
+<form method="POST">
+
+Für Datum und Uhrzeit werden automatische Standardwerte gesetzt, um Fehleingaben zu vermeiden.
+
+Fehlermeldungen
+
+Fehlermeldungen (z.B. bei ungültigen Eingaben) werden mithilfe von Flask-Funktionen angezeigt:
+
+{% with messages = get_flashed_messages() %}
+
+Diese werden dynamisch im Frontend ausgegeben.
+
+Anzeigen der Wetterdaten
+
+Nach dem Absenden des Formulars werden die Wetterdaten angezeigt, vorausgesetzt es liegt eine gültige API-Antwort vor:
+{% if api_response and api_response|length > 0 %}
+
+Angezeigt werden:
+Stadtname
+Datum und Uhrzeit
+Temperatur
+Regen, Wind, Schnee und UV-Index
+
+Kleidungsempfehlung
+
+Die Kleidungsempfehlung wird vom Backend berechnet und im Frontend als Liste erstellt:
+
+{% for item in result %}
+<p>{{ item.kategorie }}: {{ item.name }}</p>
+{% endfor %}
+
+Zusätzlich werden weitere Empfehlungen basierend auf Wetterbedingungen angezeigt:
+
+UV-Index > 3 -> Empfehlung: Sonnenbrille
+Regen > 0 -> Empfehlung: Regenschirm
+Schnee > 0 -> Hinweis auf winterliche Wetterbedingungen
+
+Darstellung von Outfit-Bildern
+
+zur Visualisierung der Empfehlung wird abhängig von der Temperatur ein passendes Outfitbild angezeigt.
+
+Die Temperatur wird in 5°C-Intervalle unterteilt. Für jedes Intervall wird ein dazugehöriges Bild, das sich im static-Ordner befindet gezeigt:
+
+{% if -20 <= temp < -15 %}
+<img src="{{ url_for('static', filename='outfit1.png') }}">
+
+Dieses Prinzip wird für den Temperaturbereich von -20°C bis 60°C durchgeführt.
+
+Dynamische Anzeige der Ergebnisse Der Bereich zur Anzeige der Wetterdaten und Empfehlungen ist standardmäßig ausgeblendet und wird erst sichtbar, wenn Daten vorhanden sind:
+
+{% if api_response and api_response|length > 0 %}
+	style="Display:grid;"
+{% endif %}
+
+Dadurch bleibt die Benutzeroberfläche übersichtlich und zeigt nur relevante Informationen an.
+
+
 
 ### 9 Backend Funktionalität (Kleiderempfehlung-Logik)
 
