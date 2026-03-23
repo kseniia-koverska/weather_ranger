@@ -64,7 +64,7 @@ def apiCall(latitude, longitude, date, time):
 	return api_reply
 
 
-DB_NAME = "wetter.db"
+DB_NAME = "anderung.db"
 
 
 def db_empfehlung_items(temperature):
@@ -76,7 +76,7 @@ def db_empfehlung_items(temperature):
 
 			sql_stmt = """
 						SELECT 
-							GROUP_CONCAT(k.name, ', ') AS Kleidungsstück, 
+							GROUP_CONCAT(DISTINCT k.name) AS Kleidungsstück, 
 							k.kategorie AS Kategorie, 
 							w.wetter_typ AS Wetterzustand
 						FROM 
@@ -95,17 +95,27 @@ def db_empfehlung_items(temperature):
 			cursor.execute(sql_stmt, (temperature, temperature))
 			kleidungsteile = cursor.fetchall()
 
+			#Testing:
+			global kleider_test
+			kleider_test = kleidungsteile
+
 			for i, item in enumerate(kleidungsteile):
 					result.append({
 						"name" : item[0],
 						"kategorie" : item[1],
 						"wetter_typ" : item[2],
 					})
+			
 
 			conn.close()
 	except:
 		flash("Datenbankverbindung fehlgeschlagen", "error")
 	return result
+
+# Testing:
+result = db_empfehlung_items(10.9)
+print("Test with 10.9°:", result)
+print("SQL Statement -> DB, min_temp <= 10.9, max_temp >= 10.9:", kleider_test)
 
 @app.template_filter("date_de")
 def date_de(value):
@@ -113,6 +123,8 @@ def date_de(value):
 
 @app.route("/", methods=["GET","POST"])
 def home():
+
+
 
 	# Variablen für Empfehlungen bezogen auf Regen, Sonne, Schnee:
 
@@ -151,7 +163,7 @@ def home():
 
 		#Zum Testen, künstliche Werte erstellen:
 		#Temperatur: -20 (veränderbar)
-		#result = db_empfehlung_items(-6)
+		#result = db_empfehlung_items(30)
 		#Testwert für Schnee
 		#api_response[0]["Schnee"] = 3.00
 		#Testwert für Regen
