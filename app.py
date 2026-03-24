@@ -113,9 +113,9 @@ def db_empfehlung_items(temperature):
 	return result
 
 # Testing:
-result = db_empfehlung_items(10.9)
-print("Test with 10.9°:", result)
-print("SQL Statement -> DB, min_temp <= 10.9, max_temp >= 10.9:", kleider_test)
+result = db_empfehlung_items(4.5)
+print("Test with 4.7°:", result)
+print("var: kleidertest:", kleider_test)
 
 @app.template_filter("date_de")
 def date_de(value):
