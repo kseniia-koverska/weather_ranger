@@ -131,6 +131,19 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
     kleidung_id INTEGER,
     FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
    );
+
+  #Kombiniert mehrere Zeilen (z.B. alle Schuhe für 10°C) zu einem einzigen, kommagetrennten Textstring.
+      SELECT group_concat(name, ', ') FROM kleidung ...
+  #Vermeidung von redundanten (doppelten) Einträgen in der Ergebnisliste.
+      SELECT group_concat(DISTINCT k.name) FROM kleidung ...
+  #Sicherstellung der referenziellen Integrität. Wenn ein Kleidungsstück gelöscht wird, werden alle zugehörigen Wetterregeln automatisch mitgelöscht.
+      FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+  #Entfernen von veralteten Kleidungsstücken oder fehlerhaften Wetterregeln.
+      DELETE FROM kleidung WHERE id = 10;
+  #Modifikation bestehender Datensätze (z.B. Korrektur von Temperaturbereichen).
+      UPDATE wetter_regeln SET max_temp = 5 WHERE max_temp = 4;
+
+  
    ### Entity-Relationship-Diagramm (ERD)
 
   ![Entity-Relation-Diagramm](entity_relation_diagram_db.png)
