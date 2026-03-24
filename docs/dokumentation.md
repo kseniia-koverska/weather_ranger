@@ -113,7 +113,7 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 - Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
 - Erstellung der Tabellen mit CREATE TABLE
 - Vollständige Bestandsliste:
--
+
   ```
   SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
   FROM kleidung k
