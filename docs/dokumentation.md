@@ -411,6 +411,67 @@ Dynamische Anzeige der Ergebnisse Der Bereich zur Anzeige der Wetterdaten und Em
 
 Dadurch bleibt die Benutzeroberfläche übersichtlich und zeigt nur relevante Informationen an.
 
+### 8.11 Gestaltung der Benutzeroberfläche (CSS)
+
+Die visuelle Gestaltung der Anwendung erfolgt über die Datei style.css, welche im Ordner static gespeichert ist.
+Sie definiert das Layout, Farben, Schriftarten sowie die Anordnung der einzelnen Elemente der Benutzeroberfläche.
+
+Grundlayout der Seite
+
+Der <body> bildet die Basis der gesamten Darstellung:
+
+Verwendung eines flexiblen Layouts (display: flex)
+Zentrierung der Inhalte
+Hintergrundbild (frog.jpg) für eine visuelle Gestaltung
+Verwendung einer gut lesbaren Standardschrift
+body {
+    display: flex;
+    align-items: center;
+    background-image: url('frog.jpg');
+    background-size: cover;
+}
+Animation
+
+Für visuelle Effekte wird eine CSS-Animation definiert:
+
+@keyframes float
+
+Diese Animation verändert Position und Größe eines Elements über die Zeit.
+Sie kann genutzt werden, um z.B. schwebende Effekte darzustellen (aktuell vorbereitet, aber optional einsetzbar).
+
+Überschriften
+
+Die Überschriften werden individuell gestaltet:
+
+Verwendung der Schriftart Fredoka
+Große Schriftgröße für den Titel
+Schatteneffekt zur besseren Lesbarkeit auf dem Hintergrund
+h1 {
+    font-size: 40px;
+    text-shadow: ...
+}
+Container (Boxen)
+
+Die Klassen .box1, .box2 und .box3 dienen als zentrale Container für Inhalte:
+
+Feste Breite
+Abgerundete Ecken (border-radius)
+Schatten für Tiefeneffekt (box-shadow)
+Leicht transparenter Hintergrund mit Blur-Effekt (backdrop-filter)
+
+Diese Boxen sorgen für eine klare Struktur und heben Inhalte optisch hervor.
+
+Eingabeformular
+
+Das Formular wird über mehrere Klassen gestaltet:
+
+.input-group
+Gruppiert Eingabefelder (Dropdown, Datum, Uhrzeit)
+Einheitliches Design mit Rahmen und abgerundeten Ecken
+Eingabeelemente
+.
+)
+
 
 
 ### 9 Backend Funktionalität (Kleiderempfehlung-Logik)
