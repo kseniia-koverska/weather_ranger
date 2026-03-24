@@ -113,35 +113,44 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 - Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
 - Erstellung der Tabellen mit CREATE TABLE
 - Vollständige Bestandsliste:
-- SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
+-
+  ````
+  SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
   FROM kleidung k
   LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
   
 - Datenintegrität: Verwendung von UNIQUE-Constraints und ON DELETE CASCADE-Regeln.
+  ```
+  CREATE TABLE kleidung (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
+  kategorie TEXT
+  );
   
-  .CREATE TABLE kleidung (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
-    kategorie TEXT
-   );
-  
-  .CREATE TABLE wetter_regeln (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ...
-    kleidung_id INTEGER,
-    FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
-   );
+  CREATE TABLE wetter_regeln (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ...
+  kleidung_id INTEGER,
+  FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+  );
+  ```
 
 - Kombiniert mehrere Zeilen (z.B. alle Schuhe für 10°C) zu einem einzigen, kommagetrennten Textstring.
-   - SELECT group_concat(name, ', ') FROM kleidung ...
+  ```
+   SELECT group_concat(name, ', ') FROM kleidung ...
 - Vermeidung von redundanten (doppelten) Einträgen in der Ergebnisliste.
-   - SELECT group_concat(DISTINCT k.name) FROM kleidung ...
+  ```
+   SELECT group_concat(DISTINCT k.name) FROM kleidung ...
 - Sicherstellung der referenziellen Integrität. Wenn ein Kleidungsstück gelöscht wird, werden alle zugehörigen Wetterregeln automatisch mitgelöscht.
-   - FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+  ```
+   FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
 - Entfernen von veralteten Kleidungsstücken oder fehlerhaften Wetterregeln.
-    - DELETE FROM kleidung WHERE id = 10;
+  ```
+  DELETE FROM kleidung WHERE id = 10;'''
 - Modifikation bestehender Datensätze (z.B. Korrektur von Temperaturbereichen).
-    - UPDATE wetter_regeln SET max_temp = 5 WHERE max_temp = 4;
+   ```
+   UPDATE wetter_regeln SET max_temp = 5 WHERE max_temp = 4;
+   ````
 
   
    ### Entity-Relationship-Diagramm (ERD)
