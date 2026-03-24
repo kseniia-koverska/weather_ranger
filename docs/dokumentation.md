@@ -114,7 +114,7 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 - Erstellung der Tabellen mit CREATE TABLE
 - Vollständige Bestandsliste:
 -
-  ````
+  ```
   SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
   FROM kleidung k
   LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
