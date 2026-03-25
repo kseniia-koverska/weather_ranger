@@ -20,7 +20,7 @@ die Wetterinformationen automatisch verarbeitet
 und dem Benutzer eine passende Kleidungsempfehlung gibt.
 
 Der Benutzer gibt eine Stadt, ein Datum und eine Uhrzeit ein und erhält eine
-Empfehlung basierend auf Temperatur, Regen und Wind.
+Empfehlung basierend auf Temperatur, Regen, Wind und UV-Index.
 
 ## 3. Projektteam
 
