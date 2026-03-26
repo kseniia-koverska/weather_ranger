@@ -20,7 +20,7 @@ die Wetterinformationen automatisch verarbeitet
 und dem Benutzer eine passende Kleidungsempfehlung gibt.
 
 Der Benutzer gibt eine Stadt, ein Datum und eine Uhrzeit ein und erhält eine
-Empfehlung basierend auf Temperatur, Regen und Wind.
+Empfehlung basierend auf Temperatur, Regen, Wind und UV-Index.
 
 ## 3. Projektteam
 
@@ -113,24 +113,46 @@ Dieses Diagramm visualisiert die Schritte und Entscheidungen, die automatisch vo
 - Das Projekt umfasst die Erstellung einer relationalen Datenbank zur automatisierten Kleidungsempfehlung basierend auf Wetterdaten. Das Ziel war es, eine Struktur zu schaffen, die nicht nur einfache Temperaturen berücksichtigt, sondern auch komplexe Szenarien wie Extremhitze, Regen und Schnee.
 - Erstellung der Tabellen mit CREATE TABLE
 - Vollständige Bestandsliste:
-- SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
+
+  ```
+  SELECT k.id, k.name, k.kategorie, r.min_temp, r.max_temp, r.wetter_typ 
   FROM kleidung k
   LEFT JOIN wetter_regeln r ON k.id = r.kleidung_id;
   
 - Datenintegrität: Verwendung von UNIQUE-Constraints und ON DELETE CASCADE-Regeln.
+  ```
+  CREATE TABLE kleidung (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
+  kategorie TEXT
+  );
   
-  .CREATE TABLE kleidung (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL UNIQUE, -- Hier ist der Constraint
-    kategorie TEXT
-   );
+  CREATE TABLE wetter_regeln (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  ...
+  kleidung_id INTEGER,
+  FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+  );
+  ```
+
+- Kombiniert mehrere Zeilen (z.B. alle Schuhe für 10°C) zu einem einzigen, kommagetrennten Textstring.
+  ```
+   SELECT group_concat(name, ', ') FROM kleidung ...
+- Vermeidung von redundanten (doppelten) Einträgen in der Ergebnisliste.
+  ```
+   SELECT group_concat(DISTINCT k.name) FROM kleidung ...
+- Sicherstellung der referenziellen Integrität. Wenn ein Kleidungsstück gelöscht wird, werden alle zugehörigen Wetterregeln automatisch mitgelöscht.
+  ```
+   FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
+- Entfernen von veralteten Kleidungsstücken oder fehlerhaften Wetterregeln.
+  ```
+  DELETE FROM kleidung WHERE id = 10;'''
+- Modifikation bestehender Datensätze (z.B. Korrektur von Temperaturbereichen).
+   ```
+   UPDATE wetter_regeln SET max_temp = 5 WHERE max_temp = 4;
+   ````
+
   
-  .CREATE TABLE wetter_regeln (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    ...
-    kleidung_id INTEGER,
-    FOREIGN KEY (kleidung_id) REFERENCES kleidung(id) ON DELETE CASCADE
-   );
    ### Entity-Relationship-Diagramm (ERD)
 
   ![Entity-Relation-Diagramm](entity_relation_diagram_db.png)
@@ -637,6 +659,239 @@ Dynamische Anzeige der Ergebnisse Der Bereich zur Anzeige der Wetterdaten und Em
 
 Dadurch bleibt die Benutzeroberfläche übersichtlich und zeigt nur relevante Informationen an.
 
+<<<<<<< HEAD
+=======
+### 8.11 Gestaltung der Benutzeroberfläche (CSS)
+
+Die visuelle Gestaltung der Anwendung erfolgt über die Datei style.css, welche im Ordner static gespeichert ist.
+Sie definiert das Layout, Farben, Schriftarten sowie die Anordnung der einzelnen Elemente der Benutzeroberfläche.
+
+Grundlayout der Seite
+
+Der <body> bildet die Basis der gesamten Darstellung:
+
+Verwendung eines flexiblen Layouts (display: flex)
+Zentrierung der Inhalte
+Hintergrundbild (frog.jpg) für eine visuelle Gestaltung
+Verwendung einer gut lesbaren Standardschrift
+body {
+    display: flex;
+    align-items: center;
+    background-image: url('frog.jpg');
+    background-size: cover;
+}
+Animation
+
+Für visuelle Effekte wird eine CSS-Animation definiert:
+
+@keyframes float
+
+Diese Animation verändert Position und Größe eines Elements über die Zeit.
+Sie kann genutzt werden, um z.B. schwebende Effekte darzustellen (aktuell vorbereitet, aber optional einsetzbar).
+
+Überschriften
+
+Die Überschriften werden individuell gestaltet:
+
+Verwendung der Schriftart Fredoka
+Große Schriftgröße für den Titel
+Schatteneffekt zur besseren Lesbarkeit auf dem Hintergrund
+h1 {
+    font-size: 40px;
+    text-shadow: ...
+}
+Container (Boxen)
+
+Die Klassen .box1, .box2 und .box3 dienen als zentrale Container für Inhalte:
+
+Feste Breite
+Abgerundete Ecken (border-radius)
+Schatten für Tiefeneffekt (box-shadow)
+Leicht transparenter Hintergrund mit Blur-Effekt (backdrop-filter)
+
+Diese Boxen sorgen für eine klare Struktur und heben Inhalte optisch hervor.
+
+Eingabeformular
+
+Das Formular wird über mehrere Klassen gestaltet:
+
+.input-group
+Gruppiert Eingabefelder (Dropdown, Datum, Uhrzeit)
+Einheitliches Design mit Rahmen und abgerundeten Ecken
+Eingabeelemente
+.
+)
+
+
+
+### 9 Backend Funktionalität (Kleiderempfehlung-Logik)
+
+Über das Webformular im Frontend wählt der User den gewünschten Standort sowie Datum und Uhrzeit für eine Kleidungsempfehlung.
+
+Die Daten werden ans Backend gesendet und werden dort dafür verwendet um:
+
+1. Eine Anfrage an die Wetter-API zu senden
+2. Die Antwort verwenden, um über eine Funktion eine Datenbankanfrage zu senden
+
+Alle erhaltenen Daten und Antworten werden letztlich zurück an das Frontend übergeben. Das passiert über Python Jinja.
+
+Beispiel (app.py):
+
+```
+return render_template(
+		"index.html",
+		submits=form_submits,
+		datum_aktuell=datum_aktuell,
+		min_date=min_date,
+		max_date=max_date,
+		uhrzeit_aktuell=uhrzeit_aktuell,
+		stadtname=stadtname,
+		api_response=api_response,
+		result=result,
+		staedte=staedte
+	)
+```
+Der erste Parameter bezieht sich auf die Datei bzw. den Endpunkt zum Empfangen der Variablen (hier: index.html). Anschließend folgen die Variabelnamen und die entsprechenden Werte der Variablen aus dem Backend (app.py).
+
+Um zum Beispiel die ausgewählte Stadt im Resultat wieder im Frontend auszugeben (Jinja-Syntax):
+
+```
+<h1> {{ stadtname }}</h1>
+```
+
+### 9.1 API-Anfrage (open-meteo)
+
+Für die API-Anfrage über open-meteo verwenden wir eine Funktion 'apiCall'. Dafür verwenden wir das Modul requests.
+
+Parameter: `latitude`, `longitude`, `date`, `time`
+
+Ablauf:
+
+1. Definieren einer leeren Liste für das Endergebnis: `api_reply = []`
+
+2. In der Funktion definieren wir eine url (String):
+
+```
+	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
+```
+
+2. In einem try-Block wird `url` über requests gefetcht: `response = requests.get(url)`
+3. Antwort(json-Objet) wird in variabel `data` geparst
+4. Für UV-Index gibt es nur einen täglichen Wert in Objekt 'daily', die anderen Werte gibt es stündlich und liegen in 'hourly'. Um den Zugriff übersichtlicher zu machen vordefinieren wir:
+
+```
+	hourly_data = data['hourly']
+	daily_data = data['daily']
+```
+
+5. Daten aus `data` werden als Dictionary in `api_reply` angehangen.
+
+```
+  api_reply.append({
+        "Datum" : date,
+        "Uhrzeit" : time,
+        "Temperatur" : hourly_data['temperature_2m'][hour_index],
+        "Regen" : hourly_data['rain'][hour_index],
+        "Schnee" : hourly_data['snowfall'][hour_index],
+        "Wind" : hourly_data['wind_speed_10m'][hour_index],
+        "UV" : daily_data['uv_index_max'][0]
+        })
+```
+6. except-Block
+7. zurückgeben von `api_reply`
+
+
+Aufrufen der Funktion (mit Formulardaten):
+
+```
+	if request.method == "POST":
+
+		standort = json.loads(request.form["standort"])
+		stadtname = standort["name"]
+		stunde = int(zeit[:2])
+
+		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
+```
+
+*Hinweis:* Da wir ausgehend von der open-meteo API Daten nur stündlich abfragen können, übernehmen wir nur den Stunden Wert, der Zeit aus dem Webformular. Da dieses in `zeit` im Format HH:MM ankommt, entnehmen wir über `zeit[:2]` nur die Stunden Anzahl und übergeben diesen umgewandelt als Integer in den API-Call.
+
+Die Städte können über ein Select-Input im Frontend ausgewählt werden und kommen im Backend als JSON-Objekt an, weil wir zum einen den Stadtnamen brauchen (für User im Frontend), aber auch Längen-/Breitengrad für die API-Anfrage. Deswegen müssen wir über json.loads den entsprechenden Wert auslesen.
+
+Momentan sind folgende Städte aufgeführt:
+
+```
+staedte = [
+	{"name": "Berlin", "Latitude": 52.5200, "Longitude": 13.4050},
+	{"name": "Hamburg", "Latitude": 53.5511, "Longitude": 9.9937},
+	{"name": "München", "Latitude": 48.1351, "Longitude": 11.5820},
+	{"name": "Köln", "Latitude": 50.9375, "Longitude": 6.9603},
+	{"name": "Frankfurt am Main", "Latitude": 50.1109, "Longitude": 8.6821},
+	{"name": "Stuttgart", "Latitude": 48.7758, "Longitude": 9.1829},
+	{"name": "Düsseldorf", "Latitude": 51.2277, "Longitude": 6.7735},
+	{"name": "Dortmund", "Latitude": 51.5136, "Longitude": 7.4653},
+	{"name": "Essen", "Latitude": 51.4556, "Longitude": 7.0116},
+	{"name": "Leipzig", "Latitude": 51.3397, "Longitude": 12.3731}
+]
+```
+
+
+### 9.2 Funktion für die Datenbankanfrage
+
+Um die entsprechenden Kleidungsitems aus der Datenbank zu erhalten verwenden wir eine Funktion 'db_empfehlung_items(temperature)'.
+
+Als Argument für den Parameter 'temperature' wird entsprechend der Wert aus der API-Response benutzt:
+
+`result = db_empfehlung_items(api_response[0]["Temperatur"])`
+
+Erläuterung der Funktion 'db_empfehlung_items(temperature)':
+
+1. Deklarierung einer leeren Liste für das Endergebnis ('result')
+2. Sicherstellen dass der Parameter nicht None ist um Fehler abzufangen
+3. Verbindung zur Datenbank erstellen, initialiseren des Cursor
+4. Eine Variabel für ein SQL-Statement erstellen (String), welches nur die Zeilen der Datenbank ausgibt die nach den Wetter-Regeln innerhalb min_temp und max_temp liegen:
+
+```
+sql_stmt = """
+						SELECT 
+							GROUP_CONCAT(k.name, ', ') AS Kleidungsstück, 
+							k.kategorie AS Kategorie, 
+							w.wetter_typ AS Wetterzustand
+						FROM 
+							kleidung k
+						JOIN 
+							wetter_regeln w ON k.id = w.kleidung_id
+						WHERE 
+							 (
+								w.min_temp <= ?
+								AND w.max_temp >= ?
+							)
+						GROUP BY 
+							Kategorie;
+						"""
+```
+5. Die `?` werden in folgender Zeile mit der Temperatur aus der API-Response ersetzt und gleichzeitig wird das gesamte Statement ausgeführt:
+
+`cursor.execute(sql_stmt, (temperature, temperature))`
+
+6. Variabel 'kleidungsteile' erstellen, welche die Datenbankanfrage speichert
+7. Iteration über 'kleidungsteile', um Werte in 'result' einzuhängen
+
+```
+for i, item in enumerate(kleidungsteile):
+					result.append({
+						"name" : item[0],
+						"kategorie" : item[1],
+						"wetter_typ" : item[2],
+					})
+```
+
+8. Verbindung schließen
+
+
+
+
+
+>>>>>>> 8ac81e41a84752f89f17d3c3dbd2e91899988ee4
 ## 9. Integration
 
 Die einzelnen Komponenten des Systems wurden schrittweise miteinander verbunden.
