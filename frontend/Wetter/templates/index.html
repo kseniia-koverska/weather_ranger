@@ -98,7 +98,7 @@
                 {% if api_response and api_response|length > 0 %}
                 <h2 style="margin:auto">Kleidungsempfehlung:</h2>
                 {% for item in result %}
-                <p>{{ item.kategorie }}: {{ item.name }}</p>
+                <p>{{ item.kategorie }}: {{ item.name | replace(',', ', ') }}</p>
                 {% endfor %}
                 {% if api_response[0].UV > 3 %}
                 <p>Sonnenbrille mitnehmen 😎</p>
