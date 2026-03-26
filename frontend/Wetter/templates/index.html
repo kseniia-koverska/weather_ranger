@@ -100,14 +100,14 @@
                 {% for item in result %}
                 <p>{{ item.kategorie }}: {{ item.name }}</p>
                 {% endfor %}
-                {% if api_response[0].UV > 3 %}
+                {% if api_response[0].UV > 3.2 and 7 <= api_response[0].Uhrzeit < 18 %}
                 <p>Sonnenbrille mitnehmen 😎</p>
                 {% endif %}
                 {% if api_response[0].Regen > 0.0 %}
                 <p>Regenschirm mitnehmen ☂️</p>
                 {% endif %}
                 {% if api_response[0].Schnee > 0.0 %}
-                <p>Ski Wetter ⛷️</p>
+                <p>Schneekleidung empfiehlt sich ⛷️</p>
                 {% endif %}
                 {% endif %}
             </div>
