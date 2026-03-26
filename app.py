@@ -64,7 +64,7 @@ def apiCall(latitude, longitude, date, time):
 	return api_reply
 
 
-DB_NAME = "anderung.db"
+DB_NAME = "wetter_26_03.db"
 
 
 def db_empfehlung_items(temperature):
