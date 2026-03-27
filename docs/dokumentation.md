@@ -712,15 +712,15 @@ Die Testwerte wurden direkt in der Funktion home() nach dem API-Aufruf gesetzt.
 
 1. Niedrige Temperatur im Winter mit Schnee und hohem UV-Wert am Abend
 
-![Winter test](-21grad_test.png)
+![Winter test](-20grad_test.png)
 
 Benutzte Testwerte:
 
-Temperatur: -20°C
-Regen: 0.0
-Schnee: 1.0
-UV: 4.0
-Uhrzeit: 19
+- Temperatur: -20°C
+- Regen: 0.0
+- Schnee: 1.0
+- UV: 4.0
+- Uhrzeit: 19
 
 **Erwartetes Ergebnis**:
 Es wird geeignete Winterkleidung angezeigt, einschließlich warmer Oberbekleidung, isolierender Hosen sowie passender Accessoires.
@@ -743,11 +743,11 @@ Lediglich die doppelte Anzeige einzelner Kleidungsstücke stellt ein Darstellung
 
 ![Sommer test](25grad_test.png)
 
-Temperatur: 25°C
-Regen: 0.0
-Schnee: 0.0
-UV: 6.0
-Uhrzeit: 13
+- Temperatur: 25°C
+- Regen: 0.0
+- Schnee: 0.0
+- UV: 6.0
+- Uhrzeit: 13
 
 **Erwartetes Ergebnis**:
 Es wird leichte Sommerkleidung angezeigt, z. B. T-Shirt, Shorts und leichte Schuhe.
@@ -768,11 +768,11 @@ Die eigentliche Kleidungsempfehlung ist jedoch nur teilweise plausibel, da neben
 
 ![Herbst test](8grad_test.png)
 
-Temperatur: 8°C
-Regen: 4.0
-Schnee: 0.0
-UV: 1.0
-Uhrzeit: 11
+- Temperatur: 8°C
+- Regen: 4.0
+- Schnee: 0.0
+- UV: 1.0
+- Uhrzeit: 11
 
 **Erwartetes Ergebnis**:
 Es wird geeignete Kleidung für kühle Temperaturen angezeigt, z. B. Übergangsjacke und lange Hosen.
@@ -797,11 +797,11 @@ Dies ist funktional korrekt, könnte jedoch im Hinblick auf Benutzerfreundlichke
 
 ![Frühlingstest](12grad_test.png)
 
-Temperatur: 12°C
-Regen: 0.0
-Schnee: 0.0
-UV: 2.0
-Uhrzeit: 10
+- Temperatur: 12°C
+- Regen: 0.0
+- Schnee: 0.0
+- UV: 2.0
+- Uhrzeit: 10
 
 **Erwartetes Ergebnis**:
 Es wird passende Übergangskleidung angezeigt.

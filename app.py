@@ -161,14 +161,14 @@ def home():
 
 		# Zum Testen, künstliche Werte erstellen:
 		# Temperatur: (veränderbar)
-		api_response[0]["Temperatur"] = 12
+		# api_response[0]["Temperatur"] = 12
 		# Testwert für Regen
-		api_response[0]["Regen"] = 0.0
+		# api_response[0]["Regen"] = 0.0
 		# Testwert für Schnee
-		api_response[0]["Schnee"] = 0.0
+		# api_response[0]["Schnee"] = 0.0
 		# Testwert für UV Index
-		api_response[0]["UV"] = 2.0
-		api_response[0]["Uhrzeit"] = 10
+		# api_response[0]["UV"] = 2.0
+		# api_response[0]["Uhrzeit"] = 10
 		# result = db_empfehlung_items(30)
 
 		result = db_empfehlung_items(api_response[0]["Temperatur"])
