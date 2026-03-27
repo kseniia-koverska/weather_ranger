@@ -659,239 +659,6 @@ Dynamische Anzeige der Ergebnisse Der Bereich zur Anzeige der Wetterdaten und Em
 
 Dadurch bleibt die Benutzeroberfläche übersichtlich und zeigt nur relevante Informationen an.
 
-<<<<<<< HEAD
-=======
-### 8.11 Gestaltung der Benutzeroberfläche (CSS)
-
-Die visuelle Gestaltung der Anwendung erfolgt über die Datei style.css, welche im Ordner static gespeichert ist.
-Sie definiert das Layout, Farben, Schriftarten sowie die Anordnung der einzelnen Elemente der Benutzeroberfläche.
-
-Grundlayout der Seite
-
-Der <body> bildet die Basis der gesamten Darstellung:
-
-Verwendung eines flexiblen Layouts (display: flex)
-Zentrierung der Inhalte
-Hintergrundbild (frog.jpg) für eine visuelle Gestaltung
-Verwendung einer gut lesbaren Standardschrift
-body {
-    display: flex;
-    align-items: center;
-    background-image: url('frog.jpg');
-    background-size: cover;
-}
-Animation
-
-Für visuelle Effekte wird eine CSS-Animation definiert:
-
-@keyframes float
-
-Diese Animation verändert Position und Größe eines Elements über die Zeit.
-Sie kann genutzt werden, um z.B. schwebende Effekte darzustellen (aktuell vorbereitet, aber optional einsetzbar).
-
-Überschriften
-
-Die Überschriften werden individuell gestaltet:
-
-Verwendung der Schriftart Fredoka
-Große Schriftgröße für den Titel
-Schatteneffekt zur besseren Lesbarkeit auf dem Hintergrund
-h1 {
-    font-size: 40px;
-    text-shadow: ...
-}
-Container (Boxen)
-
-Die Klassen .box1, .box2 und .box3 dienen als zentrale Container für Inhalte:
-
-Feste Breite
-Abgerundete Ecken (border-radius)
-Schatten für Tiefeneffekt (box-shadow)
-Leicht transparenter Hintergrund mit Blur-Effekt (backdrop-filter)
-
-Diese Boxen sorgen für eine klare Struktur und heben Inhalte optisch hervor.
-
-Eingabeformular
-
-Das Formular wird über mehrere Klassen gestaltet:
-
-.input-group
-Gruppiert Eingabefelder (Dropdown, Datum, Uhrzeit)
-Einheitliches Design mit Rahmen und abgerundeten Ecken
-Eingabeelemente
-.
-)
-
-
-
-### 9 Backend Funktionalität (Kleiderempfehlung-Logik)
-
-Über das Webformular im Frontend wählt der User den gewünschten Standort sowie Datum und Uhrzeit für eine Kleidungsempfehlung.
-
-Die Daten werden ans Backend gesendet und werden dort dafür verwendet um:
-
-1. Eine Anfrage an die Wetter-API zu senden
-2. Die Antwort verwenden, um über eine Funktion eine Datenbankanfrage zu senden
-
-Alle erhaltenen Daten und Antworten werden letztlich zurück an das Frontend übergeben. Das passiert über Python Jinja.
-
-Beispiel (app.py):
-
-```
-return render_template(
-		"index.html",
-		submits=form_submits,
-		datum_aktuell=datum_aktuell,
-		min_date=min_date,
-		max_date=max_date,
-		uhrzeit_aktuell=uhrzeit_aktuell,
-		stadtname=stadtname,
-		api_response=api_response,
-		result=result,
-		staedte=staedte
-	)
-```
-Der erste Parameter bezieht sich auf die Datei bzw. den Endpunkt zum Empfangen der Variablen (hier: index.html). Anschließend folgen die Variabelnamen und die entsprechenden Werte der Variablen aus dem Backend (app.py).
-
-Um zum Beispiel die ausgewählte Stadt im Resultat wieder im Frontend auszugeben (Jinja-Syntax):
-
-```
-<h1> {{ stadtname }}</h1>
-```
-
-### 9.1 API-Anfrage (open-meteo)
-
-Für die API-Anfrage über open-meteo verwenden wir eine Funktion 'apiCall'. Dafür verwenden wir das Modul requests.
-
-Parameter: `latitude`, `longitude`, `date`, `time`
-
-Ablauf:
-
-1. Definieren einer leeren Liste für das Endergebnis: `api_reply = []`
-
-2. In der Funktion definieren wir eine url (String):
-
-```
-	url = 'https://api.open-meteo.com/v1/forecast?latitude=' + latitude + '&longitude=' + longitude + '&daily=uv_index_max&hourly=temperature_2m,rain,snowfall,wind_speed_10m&timezone=Europe%2FBerlin&start_date=' + date + '&end_date=' + date
-```
-
-2. In einem try-Block wird `url` über requests gefetcht: `response = requests.get(url)`
-3. Antwort(json-Objet) wird in variabel `data` geparst
-4. Für UV-Index gibt es nur einen täglichen Wert in Objekt 'daily', die anderen Werte gibt es stündlich und liegen in 'hourly'. Um den Zugriff übersichtlicher zu machen vordefinieren wir:
-
-```
-	hourly_data = data['hourly']
-	daily_data = data['daily']
-```
-
-5. Daten aus `data` werden als Dictionary in `api_reply` angehangen.
-
-```
-  api_reply.append({
-        "Datum" : date,
-        "Uhrzeit" : time,
-        "Temperatur" : hourly_data['temperature_2m'][hour_index],
-        "Regen" : hourly_data['rain'][hour_index],
-        "Schnee" : hourly_data['snowfall'][hour_index],
-        "Wind" : hourly_data['wind_speed_10m'][hour_index],
-        "UV" : daily_data['uv_index_max'][0]
-        })
-```
-6. except-Block
-7. zurückgeben von `api_reply`
-
-
-Aufrufen der Funktion (mit Formulardaten):
-
-```
-	if request.method == "POST":
-
-		standort = json.loads(request.form["standort"])
-		stadtname = standort["name"]
-		stunde = int(zeit[:2])
-
-		api_response = apiCall(str(standort["Latitude"]), str(standort["Longitude"]), datum, stunde)
-```
-
-*Hinweis:* Da wir ausgehend von der open-meteo API Daten nur stündlich abfragen können, übernehmen wir nur den Stunden Wert, der Zeit aus dem Webformular. Da dieses in `zeit` im Format HH:MM ankommt, entnehmen wir über `zeit[:2]` nur die Stunden Anzahl und übergeben diesen umgewandelt als Integer in den API-Call.
-
-Die Städte können über ein Select-Input im Frontend ausgewählt werden und kommen im Backend als JSON-Objekt an, weil wir zum einen den Stadtnamen brauchen (für User im Frontend), aber auch Längen-/Breitengrad für die API-Anfrage. Deswegen müssen wir über json.loads den entsprechenden Wert auslesen.
-
-Momentan sind folgende Städte aufgeführt:
-
-```
-staedte = [
-	{"name": "Berlin", "Latitude": 52.5200, "Longitude": 13.4050},
-	{"name": "Hamburg", "Latitude": 53.5511, "Longitude": 9.9937},
-	{"name": "München", "Latitude": 48.1351, "Longitude": 11.5820},
-	{"name": "Köln", "Latitude": 50.9375, "Longitude": 6.9603},
-	{"name": "Frankfurt am Main", "Latitude": 50.1109, "Longitude": 8.6821},
-	{"name": "Stuttgart", "Latitude": 48.7758, "Longitude": 9.1829},
-	{"name": "Düsseldorf", "Latitude": 51.2277, "Longitude": 6.7735},
-	{"name": "Dortmund", "Latitude": 51.5136, "Longitude": 7.4653},
-	{"name": "Essen", "Latitude": 51.4556, "Longitude": 7.0116},
-	{"name": "Leipzig", "Latitude": 51.3397, "Longitude": 12.3731}
-]
-```
-
-
-### 9.2 Funktion für die Datenbankanfrage
-
-Um die entsprechenden Kleidungsitems aus der Datenbank zu erhalten verwenden wir eine Funktion 'db_empfehlung_items(temperature)'.
-
-Als Argument für den Parameter 'temperature' wird entsprechend der Wert aus der API-Response benutzt:
-
-`result = db_empfehlung_items(api_response[0]["Temperatur"])`
-
-Erläuterung der Funktion 'db_empfehlung_items(temperature)':
-
-1. Deklarierung einer leeren Liste für das Endergebnis ('result')
-2. Sicherstellen dass der Parameter nicht None ist um Fehler abzufangen
-3. Verbindung zur Datenbank erstellen, initialiseren des Cursor
-4. Eine Variabel für ein SQL-Statement erstellen (String), welches nur die Zeilen der Datenbank ausgibt die nach den Wetter-Regeln innerhalb min_temp und max_temp liegen:
-
-```
-sql_stmt = """
-						SELECT 
-							GROUP_CONCAT(k.name, ', ') AS Kleidungsstück, 
-							k.kategorie AS Kategorie, 
-							w.wetter_typ AS Wetterzustand
-						FROM 
-							kleidung k
-						JOIN 
-							wetter_regeln w ON k.id = w.kleidung_id
-						WHERE 
-							 (
-								w.min_temp <= ?
-								AND w.max_temp >= ?
-							)
-						GROUP BY 
-							Kategorie;
-						"""
-```
-5. Die `?` werden in folgender Zeile mit der Temperatur aus der API-Response ersetzt und gleichzeitig wird das gesamte Statement ausgeführt:
-
-`cursor.execute(sql_stmt, (temperature, temperature))`
-
-6. Variabel 'kleidungsteile' erstellen, welche die Datenbankanfrage speichert
-7. Iteration über 'kleidungsteile', um Werte in 'result' einzuhängen
-
-```
-for i, item in enumerate(kleidungsteile):
-					result.append({
-						"name" : item[0],
-						"kategorie" : item[1],
-						"wetter_typ" : item[2],
-					})
-```
-
-8. Verbindung schließen
-
-
-
-
-
->>>>>>> 8ac81e41a84752f89f17d3c3dbd2e91899988ee4
 ## 9. Integration
 
 Die einzelnen Komponenten des Systems wurden schrittweise miteinander verbunden.
@@ -902,9 +669,8 @@ Abschließend wurde das Ergebnis wieder an das Frontend zurückgegeben und im Br
 
 ## 10. Tests
 
-### Test Case 1: Kleidungsempfehlung nach Temperatur
 **Testziel:**
-Überprüfung, ob die Anwendung passende Kleidungsempfehlungen für verschiedene Temperaturbereiche aus der Datenbank zurückgibt.
+Ziel des Testens war es, die korrekte Funktion der Anwendung unter verschiedenen Wetterbedingungen zu überprüfen. Dabei wurde insbesondere getestet, ob passende Kleidungsempfehlungen sowie Zusatzhinweise (z. B. Sonnenbrille, Regenschirm) abhängig von den Wetterdaten ausgegeben werden.
 
 **Voraussetzungen:**
 
@@ -916,35 +682,156 @@ Die Wetter-API ist erreichbar.
 
 **Testmethode**
 
-Da die API nur reale Wetterdaten zurückgibt, wurde für Testzwecke eine feste Temperatur im Backend gesetzt.
+Für die Tests wurden die Wetterdaten nicht ausschließlich über die API bezogen, sondern im Backend gezielt durch künstliche Werte ersetzt. Dadurch konnten verschiedene Wetterszenarien unabhängig von aktuellen Echtzeitdaten simuliert werden.
+
+Die folgenden Parameter wurden manuell angepasst:
+
+Temperatur
+Regen
+Schnee
+UV-Index
+Uhrzeit
+
+Die Testwerte wurden direkt in der Funktion home() nach dem API-Aufruf gesetzt.
 
 ```
-temperature = api_response[0]["Temperatur"]
-
-# Testwert
-temperature = 12
+# Zum Testen, künstliche Werte erstellen:
+		# Temperatur: (veränderbar)
+		api_response[0]["Temperatur"] = 0.0
+		# Testwert für Regen
+		api_response[0]["Regen"] = 0.0
+		# Testwert für Schnee
+		api_response[0]["Schnee"] = 0.0
+		# Testwert für UV Index
+		api_response[0]["UV"] = 0.0
+		api_response[0]["Uhrzeit"] = 0.0
 ```
-Durch Änderung dieses Wertes konnten verschiedene Wetterbedingungen simuliert werden, um die Empfehlungen für unterschiedliche Wetterbedingungen zu testen.
 
-Beispiele der Testwerte:
 
-- -18 °C – sehr kaltes Wetter
+### Durchgeführte Testfälle
 
-- -5 °C – kaltes Wetter
+1. Niedrige Temperatur im Winter mit Schnee und hohem UV-Wert am Abend
 
-- 3 °C – nahe 0 °C
+![Winter test](-21grad_test.png)
 
-- 8 °C – kühles Wetter
+Benutzte Testwerte:
 
-- 12 °C – mildes Wetter
+Temperatur: -20°C
+Regen: 0.0
+Schnee: 1.0
+UV: 4.0
+Uhrzeit: 19
 
-- 18 °C – warmes Wetter
+**Erwartetes Ergebnis**:
+Es wird geeignete Winterkleidung angezeigt, einschließlich warmer Oberbekleidung, isolierender Hosen sowie passender Accessoires.
+Zusätzlich sollte eine Empfehlung für Schneekleidung erscheinen.
+Die Sonnenbrillen-Empfehlung sollte trotz hohem UV-Index nicht angezeigt werden, da die Uhrzeit außerhalb des definierten Zeitfensters (7:00 - 18:00) liegt.
 
-- 25 °C – heißes Wetter
+**Tatsächliches Ergebnis**:
+Es wurde passende Winterkleidung angezeigt, darunter Thermohose, Wintermantel sowie geeignete Schuhe.
+Die Empfehlung „Schneekleidung empfiehlt sich“ wurde korrekt ausgegeben.
+Die Sonnenbrillen-Empfehlung wurde ebenfalls korrekt nicht angezeigt.
 
-Für jeden Testwert wurde überprüft, ob die Anwendung passende Kleidungsempfehlungen aus der Datenbank zurückgibt.
+In der Kategorie Accessoires wurde jedoch eine doppelte bzw. redundante Ausgabe festgestellt:
+„Warme Mütze, Handschuhe, Mütze, Schal“.
 
-Nach Abschluss der Tests wurde die manuell gesetzte Temperatur entfernt, sodass die Anwendung wieder die reale Temperatur aus der API verwendet.
+**Bewertung**:
+Die grundlegende Logik der Anwendung funktioniert korrekt und liefert passende Empfehlungen für die gegebenen Wetterbedingungen.
+Lediglich die doppelte Anzeige einzelner Kleidungsstücke stellt ein Darstellungsproblem dar.
+
+2. Sonniger Sommertag
+
+![Sommer test](25grad_test.png)
+
+Temperatur: 25°C
+Regen: 0.0
+Schnee: 0.0
+UV: 6.0
+Uhrzeit: 13
+
+**Erwartetes Ergebnis**:
+Es wird leichte Sommerkleidung angezeigt, z. B. T-Shirt, Shorts und leichte Schuhe.
+Zusätzlich sollte die Empfehlung „Sonnenbrille mitnehmen“ erscheinen.
+Keine winterlichen oder zu warmen Kleidungsstücke sollten empfohlen werden.
+
+**Tatsächliches Ergebnis**:
+Die Anwendung zeigte passende Sommerkleidung wie T-Shirt, Shorts und Sneaker an.
+Auch die Empfehlung „Sonnenbrille mitnehmen“ wurde korrekt ausgegeben.
+
+Allerdings wurden zusätzlich „Daunenjacke“ und „Leichte Jacke“ empfohlen. Diese Kleidungsstücke sind für eine Temperatur von 25°C nur eingeschränkt bzw. nicht angemessen.
+
+**Bewertung**:
+Die Zusatzlogik für die Sonnenbrille funktioniert korrekt.
+Die eigentliche Kleidungsempfehlung ist jedoch nur teilweise plausibel, da neben passender Sommerkleidung auch zu warme Oberbekleidung ausgegeben wird.
+
+3. Regnerischer Tag bei kühler Temperatur
+
+![Herbst test](8grad_test.png)
+
+Temperatur: 8°C
+Regen: 4.0
+Schnee: 0.0
+UV: 1.0
+Uhrzeit: 11
+
+**Erwartetes Ergebnis**:
+Es wird geeignete Kleidung für kühle Temperaturen angezeigt, z. B. Übergangsjacke und lange Hosen.
+Zusätzlich sollte die Empfehlung „Regenschirm mitnehmen“ erscheinen.
+Keine Sonnenbrillen- oder Schneehinweise sollten angezeigt werden.
+
+**Tatsächliches Ergebnis**:
+Die Anwendung zeigte passende Kleidung wie Jeans, Übergangsjacke und Pullover an.
+Auch die Empfehlung „Regenschirm mitnehmen“ wurde korrekt ausgegeben.
+
+Zusätzlich wurden mehrere ähnliche Kleidungsstücke im Bereich Oberteil angezeigt, z. B. Pullover, Polyesterpullover und Dickes Hemd.
+
+**Bewertung**:
+Die grundlegende Funktionalität arbeitet korrekt, und die Empfehlungen passen grundsätzlich zur Wettersituation.
+Die Ausgabe wirkt jedoch teilweise redundant und zu umfangreich.
+
+**Ergänzende Beobachtung**:
+In der Kategorie Hose wurde nur ein Kleidungsstück („Jeans“) empfohlen, während in anderen Kategorien mehrere Optionen angezeigt wurden.
+Dies ist funktional korrekt, könnte jedoch im Hinblick auf Benutzerfreundlichkeit verbessert werden.
+
+4. Kühler Tag ohne besondere Wetterbedingungen
+
+![Frühlingstest](12grad_test.png)
+
+Temperatur: 12°C
+Regen: 0.0
+Schnee: 0.0
+UV: 2.0
+Uhrzeit: 10
+
+**Erwartetes Ergebnis**:
+Es wird passende Übergangskleidung angezeigt.
+Es sollten keine zusätzlichen Empfehlungen erscheinen.
+
+**Tatsächliches Ergebnis**:
+Die Anwendung zeigte geeignete Kleidung für die gegebene Temperatur an, darunter Jeans, Übergangsjacke, Hemd und Pullover.
+Auch passende Schuhe wie Sneaker, Halbschuhe und Lederschuhe wurden empfohlen.
+
+Es wurden keine zusätzlichen Hinweise (z. B. Sonnenbrille, Regen oder Schnee) angezeigt.
+
+**Bewertung**:
+Die Anwendung arbeitet korrekt.
+Die Kleidungsempfehlungen sind nachvollziehbar und entsprechen den erwarteten Ergebnissen.
+Es wurden keine Auffälligkeiten festgestellt.
+
+**Test der Fehlerbehandlung**
+
+Im Rahmen der Tests wurde auch das Verhalten der Anwendung bei fehlenden Daten überprüft.
+
+Dabei wurde festgestellt, dass im Fall, wenn keine passende Kleidungsempfehlung aus der Datenbank zurückgegeben wird, im Frontend lediglich die Überschrift „Kleidungsempfehlung:“ ohne Inhalt angezeigt wird.
+
+Die Implementierung dieser Funktionalität ist vorgesehen, um die Benutzerführung weiter zu verbessern.
+
+**Zusammenfassung**
+
+Insgesamt zeigt die Anwendung eine stabile und nachvollziehbare Funktionsweise unter verschiedenen Wetterbedingungen. Die getesteten Szenarien haben bestätigt, dass die Kernlogik zuverlässig arbeitet und passende Kleidungsempfehlungen generiert.
+Kleinere Auffälligkeiten betreffen vor allem die Datenbasis und die Darstellung einzelner Empfehlungen, beeinträchtigen jedoch nicht die grundlegende Funktionalität der Anwendung.
+Durch gezielte Anpassungen der zugrunde liegenden Daten und Regeln kann die Qualität der Empfehlungen weiter verbessert werden.
+
 
 ## 11. Fehlerbehandlung
 
@@ -1011,7 +898,9 @@ Falls ein Fehler auftritt, wird dieser im except-Block abgefangen und eine Fehle
 Dadurch wird verhindert, dass die Anwendung bei Datenbankproblemen abstürzt.
 
 
-### 11.3 Keine passende Kleidungsempfehlung gefunden
+### 11.3 Keine passende Kleidungsempfehlung gefunden 
+
+**(Die Fehlermeldung ist derzeit noch nicht implementiert und stellt einen geplanten Verbesserungspunkt dar.)**
 
 Es kann vorkommen, dass für die aktuellen Wetterbedingungen keine Regel in der Datenbank existiert. In diesem Fall sollte der Benutzer informiert werden, damit die Anwendung nicht abstürzt.
 
@@ -1058,6 +947,10 @@ oder:
 5. git commit -m 'kurze Beschreibung was geändert wurde'
 6. git push
 
-
-
 ## 13. Fazit
+
+Im Rahmen des Projekts konnte eine Webanwendung entwickelt werden, die Wetterdaten verarbeitet und daraus passende Kleidungsempfehlungen generiert.
+Die Zusammenarbeit der einzelnen Komponenten – Frontend, Backend, API und Datenbank – wurde erfolgreich umgesetzt.
+Durch die durchgeführten Tests konnten sowohl die Funktionsfähigkeit der Anwendung als auch kleinere Verbesserungspotenziale identifiziert werden.
+
+
